@@ -1,0 +1,19 @@
+{
+  "name": "dashboard-backend",
+  "version": "1.0.0",
+  "description": "Backend Node.js + Express + MySQL2 para la base de datos dashboard_docente",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test-connection": "node src/db/testConnection.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.0",
+    "mysql2": "^3.9.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
