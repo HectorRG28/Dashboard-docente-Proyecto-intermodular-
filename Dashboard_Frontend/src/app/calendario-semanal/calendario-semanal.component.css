@@ -1,0 +1,103 @@
+@charset "UTF-8";
+/* Contenedor principal */
+.schedule-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ocupa toda la altura */
+  padding: 20px;
+  background-color: #f4f4f4; /* Fondo gris suave */
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.top-label {
+  font-size: 0.8rem;
+  margin-bottom: 10px;
+  color: #000;
+}
+
+/* --- CABECERA (DÍAS) --- */
+.header-row {
+  display: grid;
+  /* 1 columna de 80px para horas + 7 columnas flexibles */
+  grid-template-columns: 80px repeat(7, 1fr);
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-right: 1px solid #000; /* Borde derecho para cerrar */
+  background-color: #d9d9d9; /* Gris más oscuro para cabecera */
+}
+
+.header-cell {
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  border-right: 1px solid #000;
+  font-size: 0.9rem;
+}
+
+.header-cell:last-child {
+  border-right: none;
+}
+
+.time-header {
+  background-color: #f4f4f4; /* Hueco vacío color fondo */
+  border-right: 1px solid #000;
+}
+
+/* --- CUERPO (SCROLL) --- */
+.scroll-body {
+  flex: 1; /* Ocupa el espacio restante */
+  overflow-y: auto; /* Scroll vertical activado */
+  border: 1px solid #000;
+  background-color: #fff;
+  position: relative;
+}
+
+/* Filas de Horas */
+.time-row {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr); /* Misma estructura que cabecera */
+  min-height: 50px; /* Altura de cada hora */
+  border-bottom: 1px solid #000;
+}
+
+.time-label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Texto pegado a la derecha */
+  padding-right: 10px;
+  font-size: 0.75rem;
+  color: #333;
+  border-right: 1px solid #000;
+  background-color: #f0f0f0;
+}
+
+.grid-cell {
+  border-right: 1px solid #000;
+  cursor: pointer;
+}
+
+.grid-cell:last-child {
+  border-right: none;
+}
+
+.grid-cell:hover {
+  background-color: #eee; /* Efecto hover visual */
+}
+
+/* --- BARRA DE SCROLL PERSONALIZADA (Webkit) --- */
+/* Esto imita el dibujo de la barra azul sobre fondo negro */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 20px; /* Ancho gordito como en el dibujo */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #000; /* Fondo negro (track) */
+  border-left: 1px solid #fff;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #cceeff; /* EL ÚNICO COLOR: Azulito claro (pastel) */
+  border-radius: 10px; /* Redondeado estilo píldora */
+  border: 3px solid #000; /* Borde negro alrededor de la píldora para que resalte */
+}/*# sourceMappingURL=calendario-semanal.component.css.map */

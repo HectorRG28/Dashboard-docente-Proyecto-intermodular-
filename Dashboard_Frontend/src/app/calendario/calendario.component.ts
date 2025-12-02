@@ -23,8 +23,7 @@ export class CalendarioComponent implements OnInit {
 
   // Datos
   diasMiniCalendario: any[] = []; 
-  celdasCalendario: any[] = [];
-  eventosDesdeBD: any[] = [];   // Aquí guardaremos los datos del backend
+  celdasCalendario: any[] = new Array(35); // Huecos para el calendario grande
 
   // INYECTAMOS EL SERVICIO AQUÍ
   constructor(private calendarService: CalendarService) { }
