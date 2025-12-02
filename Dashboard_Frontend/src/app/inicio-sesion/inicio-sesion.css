@@ -1,60 +1,80 @@
-/* Contenedor Pantalla Completa */
+/* --- CONTENEDOR PRINCIPAL --- */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f4f4f4;
+  background-color: #f4f4f4; /* Fondo gris suave para la pantalla */
   font-family: sans-serif;
 }
 
-/* Tarjeta General */
+/* --- TARJETA (CARD) --- */
 .card {
-  background-color: #d9d9d9; /* Gris del fondo de la tarjeta */
-  border: 1px solid #ccc; /* Sin borde negro fuerte según tu dibujo, solo gris */
+  background-color: #ffffff; /* Fondo blanco */
+  border: 1px solid #000000; /* Borde negro sólido */
   padding: 40px;
   width: 400px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  /* Sombra dura para efecto wireframe */
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.1); 
 }
 
 .card-title {
   text-align: center;
-  margin: 0 0 20px 0;
-  font-weight: normal;
+  margin: 0 0 10px 0;
+  font-weight: bold;
   font-size: 1.2rem;
   color: #000;
+  border-bottom: 1px dashed #999; /* Separador sutil */
+  padding-bottom: 10px;
 }
 
-/* --- Botones Grandes (Selección) --- */
+/* --- BOTONES --- */
 .button-group {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 15px;
 }
 
 .action-btn {
-  border: none;
+  background-color: #fff; /* Blanco */
+  color: #000; /* Texto negro */
+  border: 1px solid #000; /* Borde negro */
   padding: 10px 20px;
   font-size: 1rem;
   cursor: pointer;
   text-align: center;
-  border: 1px solid #999;
+  transition: background-color 0.2s;
 }
 
-/* Clase para que tu compañero ponga el amarillo (#ffffcc) */
+.action-btn:hover {
+  background-color: #e0e0e0; /* Gris al pasar el ratón */
+}
+
+/* Redefinimos las clases "yellow" para que ahora sean blancas */
 .yellow-btn {
-  background-color: #e6e6e6; /* Placeholder gris */
+  background-color: #fff; 
 }
 
 .yellow-bg {
-  background-color: #fff9c4; /* Un amarillo muy suave por si acaso, o cámbialo a #fff */
-  border: 1px solid #ccc;
+  background-color: #fff;
+  border: 1px solid #000;
 }
 
-/* --- Inputs --- */
+.small-btn {
+  font-size: 0.9rem;
+  padding: 5px 15px;
+  background-color: #000; /* Botón de acción principal en negro */
+  color: #fff; /* Texto blanco */
+}
+
+.small-btn:hover {
+  background-color: #333;
+}
+
+/* --- INPUTS --- */
 .input-group {
   display: flex;
   flex-direction: column;
@@ -63,22 +83,29 @@
 
 .input-group label {
   font-size: 0.9rem;
-  color: #333;
+  color: #000;
+  font-weight: bold;
 }
 
 .wireframe-input {
   padding: 8px;
-  border: none;
+  border: 1px solid #000; /* Borde negro */
   width: 100%;
-  box-sizing: border-box; /* Para que el padding no rompa el ancho */
+  box-sizing: border-box;
+  background-color: #fff;
+  outline: none;
 }
 
-/* --- Acciones del Formulario --- */
+.wireframe-input:focus {
+  background-color: #f9f9f9; /* Ligero cambio al escribir */
+}
+
+/* --- ACCIONES Y ENLACES --- */
 .form-actions {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 
 .right-align {
@@ -87,38 +114,37 @@
 
 .link-text {
   font-size: 0.8rem;
-  color: blue;
+  color: #000;
   text-decoration: underline;
   cursor: pointer;
-  line-height: 1.2;
 }
 
-.small-btn {
-  background-color: #fff9c4; /* Amarillo suave */
-  font-size: 0.9rem;
-  padding: 5px 15px;
+.link-text:hover {
+  text-decoration: none; /* Quitar subrayado al pasar ratón */
 }
 
 .back-btn {
   background: none;
   border: none;
-  color: #555;
+  color: #000;
   cursor: pointer;
   font-size: 0.8rem;
   margin-top: 10px;
   align-self: flex-start;
+  text-decoration: underline;
 }
 
-/* Cursor falso 'I' del boceto */
+/* --- Cursor Falso Visual --- */
 .cursor-input-wrapper {
   position: relative;
 }
 .fake-cursor {
   position: absolute;
-  left: 5px;
+  left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  color: #999;
+  color: #000;
   pointer-events: none;
   font-family: monospace;
+  font-weight: bold;
 }
