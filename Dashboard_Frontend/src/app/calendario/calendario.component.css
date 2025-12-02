@@ -304,3 +304,29 @@
   font-weight: 600;
   color: #333;
 }/*# sourceMappingURL=calendario.component.css.map */
+/* --- TEMA NOCHE --- */
+
+/* Fondo del reloj oscuro (azul noche) */
+.reloj.tema-noche {
+  background: #1a237e; /* Azul oscuro profundo */
+  border-color: #7986cb; /* Borde más claro */
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* Brillo exterior suave */
+}
+
+/* Cambiar color de las marcas y el punto central a blanco */
+.reloj.tema-noche .marca,
+.reloj.tema-noche .centro {
+  background: #fff;
+}
+
+/* Cambiar color de las agujas (Hora y Minuto) a blanco */
+.reloj.tema-noche .aguja.hora,
+.reloj.tema-noche .aguja.minuto {
+  background-color: #fff;
+  box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+/* La aguja del segundo la podemos poner amarilla o cian para que resalte */
+.reloj.tema-noche .aguja.segundo {
+  background-color: #ffeb3b; /* Amarillo neón */
+}
