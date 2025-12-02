@@ -27,12 +27,10 @@
         
         <div class="ajustes-popup" *ngIf="mostrarAjustes">
            <div (click)="$event.stopPropagation()">
-             
              <div style="padding: 15px; width: 200px; text-align: center;">
                 <p>Menú de configuración</p>
                 <button (click)="toggleAjustes()">Cerrar</button>
              </div>
-
            </div>
         </div>
       </div>
@@ -43,13 +41,8 @@
         <button class="pill-btn active">✓ Tareas</button>
         <button class="pill-btn">ⓧ Completado</button>
       </div>
-
-      <div class="control-item" title="Classroom">
-        <span class="icon">🏫</span>
-      </div>
-      <div class="control-item">
-        <span class="icon">🕒</span>
-      </div>
+      <div class="control-item" title="Classroom"><span class="icon">🏫</span></div>
+      <div class="control-item"><span class="icon">🕒</span></div>
     </div>
   </header>
 
@@ -58,11 +51,12 @@
     <aside class="sidebar">
       
       <div class="mini-calendar-container">
-        
         <div class="mini-header">
           <span>{{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}</span>
           <div class="mini-nav">
-            <button (click)="cambiarMes(-1)">&lt;</button> <button (click)="cambiarMes(1)">&gt;</button>  </div>
+            <button (click)="cambiarMes(-1)">&lt;</button>
+            <button (click)="cambiarMes(1)">&gt;</button>
+          </div>
         </div>
 
         <div class="mini-week-header">
@@ -71,15 +65,12 @@
 
         <div class="mini-days-grid">
           <ng-container *ngFor="let dia of diasMiniCalendario">
-            
             <span *ngIf="!dia.esHueco" 
                   [class.active-day]="dia.esHoy" 
                   (click)="seleccionarDia(dia.numero)">
               {{ dia.numero }}
             </span>
-
             <span *ngIf="dia.esHueco" class="empty"></span>
-            
           </ng-container>
         </div>
       </div>
@@ -104,14 +95,26 @@
 
     <main class="calendar-grid">
       
-      <div class="day-header" *ngFor="let dia of diasSemana">
-        {{ dia }}
-      </div>
+      <div class="day-header" *ngFor="let dia of diasSemana">{{ dia }}</div>
 
-      <div class="cal-cell" *ngFor="let celda of celdasCalendario; let i = index">
-        <span class="day-num">{{ i + 1 }}</span>
+      <div class="cal-cell" *ngFor="let celda of celdasCalendario">
+        
+        <span class="day-num" *ngIf="!celda.esHueco">{{ celda.numero }}</span>
+
+        <div class="eventos-container" *ngIf="!celda.esHueco">
+          
+          <div class="evento-chip" 
+               *ngFor="let evento of celda.eventos"
+               [title]="evento.titulo + ': ' + evento.descripcion">
+            
+            <span class="evento-hora">{{ evento.fecha_inicio | date:'HH:mm' }}</span>
+            <span class="evento-titulo">{{ evento.titulo }}</span>
+          
+          </div>
+
         </div>
 
+      </div>
     </main>
   </div>
 </div>

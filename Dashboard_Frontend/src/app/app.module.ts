@@ -1,31 +1,26 @@
-// src/app/app.module.ts
-
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+// 1. IMPORTAR ESTO:
+import { HttpClientModule } from '@angular/common/http'; 
+import { FormsModule } from '@angular/forms'; // Necesario para los formularios
 
-// 1. ASEGÚRATE DE QUE ESTO ESTÁ IMPORTADO AQUÍ ARRIBA
-import { AppRoutingModule } from './app-routing.module'; 
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-
-// Tus componentes (Angular ya los habrá puesto aquí solos)
-
+// ... tus otros componentes ...
 import { CalendarioComponent } from './calendario/calendario.component';
-import { CrearTareaComponent } from './crear-tarea/crear-tarea.component';
-import { CalendarioSemanalComponent } from './calendario-semanal/calendario-semanal.component';
-import { AjustesComponent } from './ajustes/ajustes.component'; // Si tienes el de ajustes
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarioComponent,
-    CrearTareaComponent,
-    CalendarioSemanalComponent,
-    AjustesComponent
+    // ... otros componentes
   ],
   imports: [
     BrowserModule,
-    // 2. ¡IMPORTANTE! TIENE QUE ESTAR EN ESTA LISTA:
-    AppRoutingModule 
+    AppRoutingModule,
+    // 2. AÑADIRLO AQUÍ:
+    HttpClientModule, 
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
