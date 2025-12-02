@@ -1,0 +1,83 @@
+<div class="dashboard-container">
+
+  <header class="top-bar">
+    <div class="logo-section">
+      <div class="logo-box">
+        <div class="cross-line l1"></div>
+        <div class="cross-line l2"></div>
+      </div>
+    </div>
+
+    <div class="nav-controls">
+      <div class="control-item">
+        <span class="label">nombre mes</span>
+        <span class="icon">📅</span>
+      </div>
+
+      <div class="control-item">
+        <span class="icon">🔍</span>
+      </div>
+
+      <div class="control-item relative-parent">
+        <span class="icon clickable" (click)="toggleAjustes()">⚙️</span>
+        
+        <div class="ajustes-popup" *ngIf="mostrarAjustes">
+           <div (click)="$event.stopPropagation()">
+             <app-ajustes></app-ajustes>
+           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-actions">
+      <div class="pill-toggle">
+        <button class="pill-btn active">✓ Tareas</button>
+        <button class="pill-btn">ⓧ Completado</button>
+      </div>
+
+      <div class="action-icon" title="Classroom">
+        <span class="icon">🏫</span>
+      </div>
+
+      <div class="action-icon">
+        <span class="icon">🕒</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="main-body">
+    
+    <aside class="sidebar">
+      <div class="sidebar-box month-preview">
+        <span>Mes (Vista mini)</span>
+      </div>
+
+      <div class="sidebar-box search-box">
+        <label>reunion con: <br> busqueda</label>
+        <div class="input-fake">
+          <input type="text" placeholder="Buscar...">
+          <span>🔍</span>
+        </div>
+      </div>
+
+      <div class="sidebar-box search-box">
+        <label>cursos/asignaturas <br> busqueda</label>
+        <div class="input-fake">
+          <span>☰</span>
+          <input type="text" placeholder="Asignatura">
+          <span>🔍</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="calendar-grid">
+      <div class="day-header" *ngFor="let dia of diasSemana">
+        {{ dia }}
+      </div>
+
+      <div class="cal-cell" *ngFor="let celda of celdasCalendario; let i = index">
+        <span class="day-num">{{ i + 1 }}</span>
+        </div>
+    </main>
+  </div>
+</div>

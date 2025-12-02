@@ -1,0 +1,28 @@
+<div class="schedule-container">
+
+  <div class="top-label">Tareas pendientes y calificación</div>
+
+  <div class="header-row">
+    <div class="header-cell time-header"></div>
+    
+    <div class="header-cell day-header" *ngFor="let dia of diasSemana">
+      {{ dia }}
+    </div>
+  </div>
+
+  <div class="scroll-body custom-scrollbar">
+    
+    <div class="time-row" *ngFor="let hora of horas">
+      
+      <div class="time-label">
+        {{ hora }}
+      </div>
+
+      <div class="grid-cell" *ngFor="let dia of diasSemana" (click)="clickCelda(dia, hora)">
+        </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,161 @@
+/* Contenedor que centra todo en la pantalla */
+.main-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4; /* Gris muy suave de fondo */
+  position: relative;
+  font-family: sans-serif;
+}
+
+/* --- TARJETA PRINCIPAL --- */
+.task-card {
+  width: 700px;
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  padding-bottom: 30px;
+  box-shadow: 5px 5px 0px rgba(0,0,0,0.1); /* Sombra dura estilo wireframe */
+}
+
+/* Pestañas */
+.tabs-header {
+  display: flex;
+  border-bottom: 1px solid #000;
+  background-color: #eee;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  border-right: 1px solid #000;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #000;
+}
+
+/* Pestaña Activa (Negro con texto blanco) */
+.tab-btn.active {
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+}
+
+.right-align {
+  margin-left: auto; /* Empuja el botón a la derecha del todo */
+  border-right: none;
+  border-left: 1px solid #000;
+  font-size: 1.2rem;
+}
+
+/* Título */
+.title {
+  text-align: center;
+  margin: 20px 0;
+  font-weight: normal;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 10px;
+}
+
+/* Layout de dos columnas */
+.card-body {
+  display: flex;
+  padding: 0 30px;
+  gap: 30px;
+}
+
+.form-column { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+.calendar-column { width: 200px; display: flex; flex-direction: column; align-items: center; }
+
+/* Inputs Estilo Wireframe */
+.input-group label {
+  display: block;
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.wireframe-input {
+  width: 100%;
+  border: 1px solid #000;
+  background-color: #fff;
+  padding: 8px;
+  font-family: sans-serif;
+}
+
+.area-input {
+  resize: none;
+  height: 80px;
+}
+
+/* Mini Grid Calendario */
+.mini-label { font-size: 0.7rem; text-align: center; margin-bottom: 5px; }
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 30px);
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  width: 100%;
+}
+
+.mini-cell {
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+  background: #f9f9f9;
+}
+
+/* --- POPUP (VENTANA EMERGENTE) --- */
+.popup-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo blanco semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup-card {
+  width: 450px;
+  background: #fff;
+  border: 2px solid #000;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.popup-card h3 {
+  text-align: center;
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.manual-wrapper {
+  position: relative;
+}
+
+.fake-cursor {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: monospace;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.action-btn {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  cursor: pointer;
+}

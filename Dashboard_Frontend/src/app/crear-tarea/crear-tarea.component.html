@@ -1,0 +1,71 @@
+<div class="main-container">
+
+  <div class="task-card">
+    
+    <div class="tabs-header">
+      <button class="tab-btn active">fecha y hora</button>
+      <button class="tab-btn" (click)="abrirPopup()">duración</button>
+      <button class="tab-btn">citas</button>
+      
+      <button class="tab-btn icon-btn right-align">☰</button>
+    </div>
+
+    <h2 class="title">Título de la tarea</h2>
+
+    <div class="card-body">
+      
+      <div class="form-column">
+        <div class="input-group">
+          <label>nombre del evento:</label>
+          <input type="text" class="wireframe-input">
+        </div>
+
+        <div class="input-group">
+          <label>Lugar del evento:</label>
+          <input type="text" class="wireframe-input">
+        </div>
+
+        <div class="input-group">
+          <label>Descripción:</label>
+          <textarea class="wireframe-input area-input"></textarea>
+        </div>
+      </div>
+
+      <div class="calendar-column">
+        <p class="mini-label">suponemos que <br> es un calendario</p>
+        <div class="mini-grid">
+          <div class="mini-cell" *ngFor="let i of [].constructor(20)"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="popup-overlay" *ngIf="mostrarPopup">
+    
+    <div class="popup-card">
+      <h3>Indique la duración de la reunión:</h3>
+
+      <div class="input-group">
+        <select class="wireframe-input">
+          <option>Seleccionar intervalo...</option>
+          <option>30 min</option>
+          <option>60 min</option>
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Indicar Manualmente:</label>
+        <div class="manual-wrapper">
+          <span class="fake-cursor">I</span>
+          <input type="text" class="wireframe-input">
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="action-btn" (click)="cerrarPopup()">Aceptar</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>

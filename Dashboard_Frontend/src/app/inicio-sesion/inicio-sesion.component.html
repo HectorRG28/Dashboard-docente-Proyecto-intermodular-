@@ -1,0 +1,77 @@
+<div class="login-container">
+
+  <div class="card main-card" *ngIf="vistaActual === 'seleccion'">
+    <h2 class="card-title">Iniciar Sesión:</h2>
+    
+    <div class="button-group">
+      <button class="action-btn yellow-btn" (click)="cambiarVista('login')">
+        Log in
+      </button>
+
+      <button class="action-btn yellow-btn" (click)="cambiarVista('registro')">
+        Registrarse
+      </button>
+    </div>
+  </div>
+
+  <div class="card form-card" *ngIf="vistaActual === 'login' || vistaActual === 'registro'">
+    <h2 class="card-title">
+      {{ vistaActual === 'login' ? 'Log in' : 'Registrarse' }}
+    </h2>
+
+    <div class="input-group">
+      <label>Correo Electrónico:</label>
+      <input type="email" class="wireframe-input yellow-bg">
+    </div>
+
+    <div class="input-group">
+      <label>Contraseña:</label>
+      <input type="password" class="wireframe-input yellow-bg">
+    </div>
+
+    <div class="input-group" *ngIf="vistaActual === 'registro'">
+      <label>Confirmar Contraseña:</label>
+      <input type="password" class="wireframe-input yellow-bg">
+    </div>
+
+    <div class="form-actions">
+      <div class="left-link" *ngIf="vistaActual === 'login'">
+        <a (click)="cambiarVista('recuperar1')" class="link-text">No me acuerdo de <br> mi contraseña</a>
+      </div>
+
+      <button class="action-btn small-btn" (click)="entrar()">Aceptar</button>
+    </div>
+    
+    <button class="back-btn" (click)="cambiarVista('seleccion')">⬅ Volver</button>
+  </div>
+
+  <div class="card form-card" *ngIf="vistaActual === 'recuperar1'">
+    <div class="input-group">
+      <label>Introduzca su correo electrónico:</label>
+      <div class="cursor-input-wrapper">
+         <span class="fake-cursor">I</span>
+         <input type="email" class="wireframe-input yellow-bg">
+      </div>
+    </div>
+    <div class="form-actions right-align">
+        <button class="action-btn small-btn" (click)="cambiarVista('recuperar2')">Continuar</button>
+    </div>
+  </div>
+
+  <div class="card form-card" *ngIf="vistaActual === 'recuperar2'">
+    <div class="input-group">
+      <label>Introduzca su nueva contraseña:</label>
+      <input type="password" class="wireframe-input yellow-bg">
+    </div>
+
+    <div class="input-group">
+      <label>Confirmar contraseña:</label>
+      <input type="password" class="wireframe-input yellow-bg">
+    </div>
+
+    <div class="form-actions right-align">
+        <button class="action-btn small-btn" (click)="cambiarVista('seleccion')">Aceptar</button>
+    </div>
+  </div>
+
+</div>

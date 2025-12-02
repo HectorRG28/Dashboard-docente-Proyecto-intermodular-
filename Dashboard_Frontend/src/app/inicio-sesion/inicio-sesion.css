@@ -1,0 +1,124 @@
+/* Contenedor Pantalla Completa */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+  font-family: sans-serif;
+}
+
+/* Tarjeta General */
+.card {
+  background-color: #d9d9d9; /* Gris del fondo de la tarjeta */
+  border: 1px solid #ccc; /* Sin borde negro fuerte según tu dibujo, solo gris */
+  padding: 40px;
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card-title {
+  text-align: center;
+  margin: 0 0 20px 0;
+  font-weight: normal;
+  font-size: 1.2rem;
+  color: #000;
+}
+
+/* --- Botones Grandes (Selección) --- */
+.button-group {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.action-btn {
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  border: 1px solid #999;
+}
+
+/* Clase para que tu compañero ponga el amarillo (#ffffcc) */
+.yellow-btn {
+  background-color: #e6e6e6; /* Placeholder gris */
+}
+
+.yellow-bg {
+  background-color: #fff9c4; /* Un amarillo muy suave por si acaso, o cámbialo a #fff */
+  border: 1px solid #ccc;
+}
+
+/* --- Inputs --- */
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.wireframe-input {
+  padding: 8px;
+  border: none;
+  width: 100%;
+  box-sizing: border-box; /* Para que el padding no rompa el ancho */
+}
+
+/* --- Acciones del Formulario --- */
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.right-align {
+  justify-content: flex-end;
+}
+
+.link-text {
+  font-size: 0.8rem;
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+  line-height: 1.2;
+}
+
+.small-btn {
+  background-color: #fff9c4; /* Amarillo suave */
+  font-size: 0.9rem;
+  padding: 5px 15px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
+/* Cursor falso 'I' del boceto */
+.cursor-input-wrapper {
+  position: relative;
+}
+.fake-cursor {
+  position: absolute;
+  left: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  pointer-events: none;
+  font-family: monospace;
+}

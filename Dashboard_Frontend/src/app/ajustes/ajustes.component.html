@@ -1,0 +1,39 @@
+<div class="settings-card">
+  
+  <div class="setting-row">
+    <span>Brillo</span>
+    <div class="control-wrapper">
+      <span class="icon-small">🔆</span>
+      <input type="range" min="0" max="100" value="80" class="brightness-slider">
+    </div>
+  </div>
+
+  <div class="setting-row">
+    <span>Modo oscuro</span>
+    <div class="control-wrapper">
+      <label class="switch">
+        <input type="checkbox" (change)="toggleDarkMode()" [checked]="isDarkMode">
+        <span class="slider round"></span>
+      </label>
+      <span class="icon-small" *ngIf="isDarkMode">🌙</span>
+      <span class="icon-small" *ngIf="!isDarkMode">☀️</span>
+    </div>
+  </div>
+
+  <div class="setting-row">
+    <span>Formato de la hora</span>
+    <div class="format-toggles">
+      <button 
+        [class.active]="timeFormat === '12h'" 
+        (click)="setFormat('12h')">
+        12 h
+      </button>
+      <button 
+        [class.active]="timeFormat === '24h'" 
+        (click)="setFormat('24h')">
+        24 h
+      </button>
+    </div>
+  </div>
+
+</div>
