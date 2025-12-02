@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-calendario-semanal',
   templateUrl: './calendario-semanal.component.html',
-  styleUrls: ['./calendario-semanal.component.css']
+  styleUrls: ['./calendario-semanal.component.scss']
 })
 export class CalendarioSemanalComponent {
 

@@ -1,26 +1,31 @@
+// src/app/app.module.ts
+
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppRoutingModule } from './app-routing.module';
+// 1. ASEGÚRATE DE QUE ESTO ESTÁ IMPORTADO AQUÍ ARRIBA
+import { AppRoutingModule } from './app-routing.module'; 
 import { AppComponent } from './app.component';
+
+// Tus componentes (Angular ya los habrá puesto aquí solos)
+
 import { CalendarioComponent } from './calendario/calendario.component';
 import { CrearTareaComponent } from './crear-tarea/crear-tarea.component';
-import { AjustesComponent } from './ajustes/ajustes.component';
 import { CalendarioSemanalComponent } from './calendario-semanal/calendario-semanal.component';
-import { InicioSesionComponent } from './inicio-sesion/inicio-sesion.component';
+import { AjustesComponent } from './ajustes/ajustes.component'; // Si tienes el de ajustes
 
 @NgModule({
   declarations: [
     AppComponent,
     CalendarioComponent,
     CrearTareaComponent,
-    AjustesComponent,
     CalendarioSemanalComponent,
-    InicioSesionComponent
+    AjustesComponent
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    // 2. ¡IMPORTANTE! TIENE QUE ESTAR EN ESTA LISTA:
+    AppRoutingModule 
   ],
   providers: [],
   bootstrap: [AppComponent]
