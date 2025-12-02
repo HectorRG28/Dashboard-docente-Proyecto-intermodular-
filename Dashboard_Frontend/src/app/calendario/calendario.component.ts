@@ -25,7 +25,7 @@ export class CalendarioComponent implements OnInit {
 
   // Arrays de datos
   diasMiniCalendario: any[] = []; 
-  celdasCalendario: any[] = new Array(35); // Huecos para el calendario grande
+  celdasCalendario: any[] = new Array(31); // Huecos para el calendario grande
 
   constructor() { }
 

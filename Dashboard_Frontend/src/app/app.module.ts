@@ -12,7 +12,8 @@ import { AppComponent } from './app.component';
 import { CalendarioComponent } from './calendario/calendario.component';
 import { CrearTareaComponent } from './crear-tarea/crear-tarea.component';
 import { CalendarioSemanalComponent } from './calendario-semanal/calendario-semanal.component';
-import { AjustesComponent } from './ajustes/ajustes.component'; // Si tienes el de ajustes
+import { AjustesComponent } from './ajustes/ajustes.component';
+import { TimeAnalogComponent } from './time-analog/time-analog.component'; // Si tienes el de ajustes
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { AjustesComponent } from './ajustes/ajustes.component'; // Si tienes el 
     CalendarioComponent,
     CrearTareaComponent,
     CalendarioSemanalComponent,
-    AjustesComponent
+    AjustesComponent,
+    TimeAnalogComponent
   ],
   imports: [
     BrowserModule,

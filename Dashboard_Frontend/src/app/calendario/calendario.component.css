@@ -1,0 +1,306 @@
+/* --- CONTENEDOR PRINCIPAL (Ocupa toda la pantalla) --- */
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Altura completa */
+  width: 100vw;
+  overflow: hidden; /* Evita scrolls dobles */
+  background-color: #fff;
+}
+
+/* --- HEADER (Barra superior) --- */
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 64px; /* Altura fija */
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  flex-shrink: 0; /* No se encoge */
+}
+
+/* Logo */
+.logo-section {
+  display: flex;
+  align-items: center;
+}
+
+.logo-box {
+  width: 36px;
+  height: 36px;
+  border: 2px solid #333;
+  position: relative;
+  margin-right: 20px;
+}
+
+.cross-line {
+  position: absolute;
+  background: #333;
+}
+
+.l1 {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: rotate(45deg);
+}
+
+.l2 {
+  width: 100%;
+  height: 2px;
+  top: 50%;
+  left: 0;
+  transform: rotate(-45deg);
+}
+
+/* Controles del centro */
+.nav-controls {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.control-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.control-item:hover {
+  background-color: #f0f0f0;
+}
+
+.label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.icon {
+  font-size: 1.2rem;
+}
+
+/* Popup Ajustes */
+.relative-parent {
+  position: relative;
+}
+
+.ajustes-popup {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  margin-top: 10px;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Acciones Derecha */
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.pill-toggle {
+  display: flex;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.pill-btn {
+  border: none;
+  background: #fff;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-right: 1px solid #ccc;
+  font-weight: 500;
+}
+
+.pill-btn:last-child {
+  border-right: none;
+}
+
+.pill-btn.active {
+  background: #e0e0e0;
+  font-weight: 700;
+}
+
+/* --- CUERPO (Sidebar + Grid) --- */
+.main-body {
+  display: flex;
+  flex: 1; /* Ocupa el resto de altura */
+  overflow: hidden;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px; /* Ancho fijo */
+  border-right: 1px solid #e0e0e0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background-color: #fafafa;
+  overflow-y: auto;
+}
+
+/* MINI CALENDARIO (Estilo limpio) */
+.mini-calendar-container {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.mini-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.mini-nav button {
+  background: none;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mini-nav button:hover {
+  background-color: #f0f0f0;
+}
+
+.mini-week-header {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 8px;
+}
+
+.mini-days-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 8px;
+  text-align: center;
+}
+
+.mini-days-grid span {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border-radius: 50%;
+  margin: 0 auto;
+}
+
+.mini-days-grid span:hover:not(.empty) {
+  background-color: #f0f0f0;
+}
+
+.active-day {
+  background-color: #333 !important;
+  color: #fff;
+  font-weight: bold;
+}
+
+.empty {
+  cursor: default;
+}
+
+/* Inputs Sidebar */
+.sidebar-box label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input-fake {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+  background: #fff;
+  border-radius: 8px;
+}
+
+.input-fake:focus-within {
+  border-color: #333;
+}
+
+.input-fake input {
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+/* GRID CALENDARIO GRANDE */
+.calendar-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: 40px repeat(5, 1fr); /* Cabecera + 5 filas */
+  padding: 1px 0 0 1px; /* Ajuste para bordes */
+  overflow-y: auto;
+}
+
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #555;
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  background-color: #fff;
+  font-size: 0.9rem;
+}
+
+.cal-cell {
+  border-right: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+  position: relative;
+  background-color: #fff;
+  min-height: 100px;
+  transition: background 0.1s;
+}
+
+.cal-cell:hover {
+  background-color: #fafafa;
+}
+
+.day-num {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}/*# sourceMappingURL=calendario.component.css.map */
