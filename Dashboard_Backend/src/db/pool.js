@@ -1,34 +1,22 @@
-// src/db/pool.js
-// ----------------------------------------------------------
-// Este archivo crea un "pool" de conexiones a MySQL utilizando
-// la librería mysql2. El pool es un conjunto de conexiones que
-// se reutilizan para mejorar el rendimiento.
-// ----------------------------------------------------------
+const { createPool } = require('mysql2/promise');
+const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT } = require('./config.js');
 
-// 1. DECLARACIONES
-let mysql;        // Paquete mysql2
-let dbConfig;     // Configuración de conexión
-let pool;         // Pool de conexiones básico
-let poolPromise;  // Pool en versión promesa (para usar async/await)
-
-// 2. ASIGNACIONES
-mysql = require('mysql2');       // Cargamos el paquete mysql2
-dbConfig = require('./config');  // Cargamos la configuración de conexión
-
-// Creamos el pool de conexiones usando la configuración.
-pool = mysql.createPool({
-  host: dbConfig.host,
-  port: dbConfig.port,
-  user: dbConfig.user,
-  password: dbConfig.password,
-  database: dbConfig.database,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0
+const pool = createPool({
+    host: DB_HOST,
+    user: DB_USER,
+    password: DB_PASSWORD,
+    database: DB_NAME,
+    port: DB_PORT
 });
 
-// Convertimos el pool a versión "promesa" para poder usar async/await.
-poolPromise = pool.promise();
+// Mensaje de conexión opcional
+pool.getConnection()
+    .then(connection => {
+        pool.releaseConnection(connection);
+        console.log('✅ Base de datos conectada correctamente');
+    })
+    .catch(error => {
+        console.error('❌ Error conectando a la base de datos:', error.code);
+    });
 
-// 3. EXPORTACIONES
-module.exports = poolPromise;
+module.exports = { pool };

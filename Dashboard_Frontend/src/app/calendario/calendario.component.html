@@ -1,5 +1,6 @@
 <div class="dashboard-container">
 
+  <!-- CABECERA PRINCIPAL -->
   <header class="top-bar">
     
     <div class="logo-section">
@@ -9,8 +10,10 @@
       </div>
     </div>
 
+    <!-- ZONA CENTRAL DE NAVEGACIÓN -->
     <div class="nav-controls">
       
+      <!-- FECHA -->
       <div class="control-item">
         <span class="label">
           {{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}
@@ -18,10 +21,20 @@
         <span class="icon">📅</span>
       </div>
 
+      <!-- Boton crear tarea -->
+      <div class="control-item">
+        <button (click)="irACrearTarea()" 
+                style="background-color: black; color: white; padding: 5px 15px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+          <span>+</span> Nueva Tarea
+        </button>
+      </div>
+      <!--  FIN DEL BOTÓN -->
+
       <div class="control-item">
         <span class="icon">🔍</span>
       </div>
 
+      <!-- POPUP DE AJUSTES -->
       <div class="control-item relative-parent">
         <span class="icon clickable" (click)="toggleAjustes()">⚙️</span>
         
@@ -36,6 +49,7 @@
       </div>
     </div>
 
+    <!-- ACCIONES DERECHA -->
     <div class="right-actions">
       <div class="pill-toggle">
         <button class="pill-btn active">✓ Tareas</button>
@@ -46,8 +60,10 @@
     </div>
   </header>
 
+  <!-- CUERPO PRINCIPAL -->
   <div class="main-body">
     
+    <!-- BARRA LATERAL -->
     <aside class="sidebar">
       
       <div class="mini-calendar-container">
@@ -93,6 +109,7 @@
       </div>
     </aside>
 
+    <!-- CALENDARIO GRANDE -->
     <main class="calendar-grid">
       
       <div class="day-header" *ngFor="let dia of diasSemana">{{ dia }}</div>
@@ -105,10 +122,21 @@
           
           <div class="evento-chip" 
                *ngFor="let evento of celda.eventos"
-               [title]="evento.titulo + ': ' + evento.descripcion">
+               [title]="evento.titulo + ': ' + evento.descripcion"
+               style="display: flex; justify-content: space-between; align-items: center; padding-right: 5px;">
             
-            <span class="evento-hora">{{ evento.fecha_inicio | date:'HH:mm' }}</span>
-            <span class="evento-titulo">{{ evento.titulo }}</span>
+            <!-- Datos del evento -->
+            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+               <span class="evento-hora">{{ evento.fecha_inicio | date:'HH:mm' }}</span>
+               <span class="evento-titulo">{{ evento.titulo }}</span>
+            </div>
+
+            <!-- BOTÓN BORRAR (X ROJA) -->
+            <span (click)="borrarTarea(evento.id_actividad, $event)" 
+                  style="color: red; font-weight: bold; cursor: pointer; margin-left: 5px; font-size: 12px;"
+                  title="Eliminar tarea">
+              ✖
+            </span>
           
           </div>
 

@@ -6,66 +6,88 @@
       <button class="tab-btn active">fecha y hora</button>
       <button class="tab-btn" (click)="abrirPopup()">duración</button>
       <button class="tab-btn">citas</button>
-      
       <button class="tab-btn icon-btn right-align">☰</button>
     </div>
 
-    <h2 class="title">Título de la tarea</h2>
+    <h2 class="title">Nueva Tarea</h2>
 
     <div class="card-body">
       
       <div class="form-column">
+        
         <div class="input-group">
-          <label>nombre del evento:</label>
-          <input type="text" class="wireframe-input">
+          <label>Nombre del evento:</label>
+          <input type="text" class="wireframe-input" [(ngModel)]="nuevaTarea.titulo" placeholder="Ej: Examen Tema 1">
         </div>
 
-        <div class="input-group">
-          <label>Lugar del evento:</label>
-          <input type="text" class="wireframe-input">
+        <div style="display: flex; gap: 10px;">
+          
+          <div class="input-group" style="flex: 1;">
+            <label>Módulo:</label>
+            <select class="wireframe-input" [(ngModel)]="nuevaTarea.id_modulo_seleccionado">
+              <option *ngFor="let m of listaModulos" [value]="m.id_modulo">
+                {{ m.nombre_modulo }}
+              </option>
+            </select>
+          </div>
+
+          <div class="input-group" style="flex: 1;">
+            <label>Tipo:</label>
+            <select class="wireframe-input" [(ngModel)]="nuevaTarea.id_tipo">
+              <option *ngFor="let t of listaTipos" [value]="t.id_tipo">
+                {{ t.nombre_tipo }}
+              </option>
+            </select>
+          </div>
+
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div class="input-group" style="flex: 1;">
+            <label>Fecha:</label>
+            <input type="date" class="wireframe-input" [(ngModel)]="nuevaTarea.fecha">
+          </div>
+          <div class="input-group" style="flex: 1;">
+            <label>Hora:</label>
+            <input type="time" class="wireframe-input" [(ngModel)]="nuevaTarea.horaInicio">
+          </div>
         </div>
 
         <div class="input-group">
           <label>Descripción:</label>
-          <textarea class="wireframe-input area-input"></textarea>
+          <textarea class="wireframe-input area-input" [(ngModel)]="nuevaTarea.descripcion"></textarea>
         </div>
+
+        <div style="margin-top: 20px; text-align: right;">
+          <button class="action-btn" 
+                  style="background: black; color: white; padding: 10px 20px; font-weight: bold;" 
+                  (click)="guardarTarea()">
+            GUARDAR TAREA
+          </button>
+        </div>
+
       </div>
 
       <div class="calendar-column">
-        <p class="mini-label">suponemos que <br> es un calendario</p>
+        <p class="mini-label">vista previa</p>
         <div class="mini-grid">
           <div class="mini-cell" *ngFor="let i of [].constructor(20)"></div>
         </div>
       </div>
+
     </div>
   </div>
 
   <div class="popup-overlay" *ngIf="mostrarPopup">
-    
     <div class="popup-card">
-      <h3>Indique la duración de la reunión:</h3>
-
+      <h3>Duración:</h3>
       <div class="input-group">
-        <select class="wireframe-input">
-          <option>Seleccionar intervalo...</option>
-          <option>30 min</option>
-          <option>60 min</option>
-        </select>
+        <select class="wireframe-input"><option>30 min</option></select>
       </div>
-
-      <div class="input-group">
-        <label>Indicar Manualmente:</label>
-        <div class="manual-wrapper">
-          <span class="fake-cursor">I</span>
-          <input type="text" class="wireframe-input">
-        </div>
-      </div>
-
       <div class="actions">
         <button class="action-btn" (click)="cerrarPopup()">Aceptar</button>
       </div>
     </div>
-
   </div>
 
 </div>

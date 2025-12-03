@@ -42,7 +42,7 @@
   /* Se verá como el slider por defecto del navegador (gris/negro) */
 }
 
-/* --- INTERRUPTOR (TOGGLE) MODO OSCURO --- */
+/* --- INTERRUPTOR MODO OSCURO --- */
 .switch {
   position: relative;
   display: inline-block;
@@ -77,7 +77,7 @@
   transition: .2s;
 }
 
-/* ESTADO ACTIVO (CHECKED): Se pone negro o gris oscuro */
+/* ESTADO ACTIVO: Se pone negro o gris oscuro */
 input:checked + .slider {
   background-color: #999; /* Gris medio al activarse */
 }

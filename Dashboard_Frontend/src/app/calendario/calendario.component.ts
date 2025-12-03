@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// Importamos el servicio que acabas de crear
 import { CalendarService } from '../../services/calendar.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-calendario',
@@ -11,7 +11,6 @@ export class CalendarioComponent implements OnInit {
 
   mostrarAjustes: boolean = false;
   
-  // Fechas y Visualización
   fechaActual: Date = new Date(); 
   mesActualVisual: Date = new Date(); 
   
@@ -21,54 +20,67 @@ export class CalendarioComponent implements OnInit {
   ];
   diasSemana: string[] = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
 
-  // Datos
   diasMiniCalendario: any[] = []; 
-  celdasCalendario: any[] = new Array(35); // Huecos para el calendario grande
+  celdasCalendario: any[] = [];
+  eventosDesdeBD: any[] = [];   
 
-  // INYECTAMOS EL SERVICIO AQUÍ
-  constructor(private calendarService: CalendarService) { }
+  constructor(private calendarService: CalendarService, private router: Router) { }
 
   ngOnInit(): void {
     this.generarMiniCalendario();
-    this.cargarEventos(); // Llamamos al backend al iniciar
+    this.cargarEventos(); 
   }
 
-  // --- 1. CARGAR DATOS DEL BACKEND ---
+  irACrearTarea() {
+    this.router.navigate(['/crear-tarea']); 
+  }
+
+  // borrar tarea
+  borrarTarea(id: number, evento: Event) {
+    // Evitamos que el click se propague (si tuvieras click en la celda)
+    evento.stopPropagation();
+
+    const confirmar = confirm('¿Estás seguro de que quieres eliminar esta tarea?');
+    if (confirmar) {
+      this.calendarService.deleteActividad(id).subscribe({
+        next: () => {
+          // Si se borra bien, recargamos los eventos
+          this.cargarEventos();
+        },
+        error: (e) => alert('Error al borrar la tarea')
+      });
+    }
+  }
+  // Fin de función borrarTarea 
+
   cargarEventos() {
     this.calendarService.getActividades().subscribe({
-      next: (datos) => {
-        console.log('✅ Eventos cargados:', datos);
+      next: (datos: any) => {
         this.eventosDesdeBD = datos;
-        this.generarCalendarioGrande(); // Regeneramos el calendario con los datos
+        this.generarCalendarioGrande(); 
       },
-      error: (e) => console.error('❌ Error cargando eventos:', e)
+      error: (e: any) => console.error('❌ Error cargando eventos:', e)
     });
   }
 
-  // --- 2. GENERAR CALENDARIO GRANDE ---
   generarCalendarioGrande() {
     this.celdasCalendario = [];
     const year = this.mesActualVisual.getFullYear();
     const month = this.mesActualVisual.getMonth();
 
-    // Calcular primer día (Lunes=0)
     let primerDiaSemana = new Date(year, month, 1).getDay(); 
     primerDiaSemana = primerDiaSemana === 0 ? 6 : primerDiaSemana - 1; 
 
     const ultimoDiaMes = new Date(year, month + 1, 0).getDate();
 
-    // Rellenar huecos vacíos iniciales
     for (let i = 0; i < primerDiaSemana; i++) {
       this.celdasCalendario.push({ numero: '', esHueco: true, eventos: [] });
     }
 
-    // Rellenar días reales
     for (let i = 1; i <= ultimoDiaMes; i++) {
       const fechaDeEstaCelda = new Date(year, month, i);
       
-      // FILTRAR: ¿Hay eventos para hoy?
-      const eventosDelDia = this.eventosDesdeBD.filter(evento => {
-        // Convertimos la fecha que viene del MySQL a objeto Date
+      const eventosDelDia = this.eventosDesdeBD.filter((evento: any) => {
         const fechaEvento = new Date(evento.fecha_inicio);
         return this.mismaFecha(fechaDeEstaCelda, fechaEvento);
       });
@@ -80,7 +92,6 @@ export class CalendarioComponent implements OnInit {
       });
     }
 
-    // Rellenar huecos finales (estético)
     while (this.celdasCalendario.length < 35) {
       this.celdasCalendario.push({ numero: '', esHueco: true, eventos: [] });
     }
@@ -92,7 +103,6 @@ export class CalendarioComponent implements OnInit {
            d1.getFullYear() === d2.getFullYear();
   }
 
-  // --- 3. MINI CALENDARIO ---
   generarMiniCalendario() {
     this.diasMiniCalendario = [];
     const year = this.mesActualVisual.getFullYear();
@@ -112,9 +122,9 @@ export class CalendarioComponent implements OnInit {
 
   cambiarMes(direccion: number) {
     this.mesActualVisual.setMonth(this.mesActualVisual.getMonth() + direccion);
-    this.mesActualVisual = new Date(this.mesActualVisual);
+    this.mesActualVisual = new Date(this.mesActualVisual); 
     this.generarMiniCalendario();
-    this.generarCalendarioGrande(); // Importante regenerar ambos
+    this.generarCalendarioGrande(); 
   }
 
   seleccionarDia(dia: number) { console.log('Click:', dia); }

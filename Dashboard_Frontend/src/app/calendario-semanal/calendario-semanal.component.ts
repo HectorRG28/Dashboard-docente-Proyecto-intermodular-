@@ -27,7 +27,6 @@ export class CalendarioSemanalComponent {
 
   clickCelda(dia: string, hora: string) {
     console.log(`Click en ${dia} a las ${hora}`);
-    // Aquí podrías navegar a la pantalla de "Crear Tarea" si quisieras
   }
 
 }
