@@ -51,7 +51,6 @@ export class CalendarioComponent implements OnInit {
       });
     }
   }
-  // Fin de función borrarTarea 
 
   cargarEventos() {
     this.calendarService.getActividades().subscribe({
@@ -59,7 +58,7 @@ export class CalendarioComponent implements OnInit {
         this.eventosDesdeBD = datos;
         this.generarCalendarioGrande(); 
       },
-      error: (e: any) => console.error('❌ Error cargando eventos:', e)
+      error: (e: any) => console.error('Error cargando eventos:', e)
     });
   }
 
@@ -129,25 +128,5 @@ export class CalendarioComponent implements OnInit {
 
   seleccionarDia(dia: number) { console.log('Click:', dia); }
   toggleAjustes() { this.mostrarAjustes = !this.mostrarAjustes; }
-  
-  export class RelojAnalogicoComponent implements OnInit, OnDestroy {
-  // ... tus variables de rotación ...
-  
-  // 1. Nueva variable para controlar el tema
-  esDeNoche: boolean = false; 
 
-  // ... ngOnInit ...
-
-  actualizarReloj() {
-    const fecha = new Date();
-    
-    // ... tus cálculos de grados existentes ...
-
-    // 2. Lógica para determinar si es noche (ej: antes de las 6 o después de las 19)
-    const horaActual = fecha.getHours();
-    this.esDeNoche = horaActual >= 19 || horaActual < 6;
-    
-    // ... resto de tu código ...
-  }
-}
 }

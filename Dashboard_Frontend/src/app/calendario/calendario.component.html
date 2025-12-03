@@ -21,14 +21,14 @@
         <span class="icon">📅</span>
       </div>
 
-      <!-- Boton crear tarea -->
+      <!-- BOTÓN CREAR TAREA -->
       <div class="control-item">
         <button (click)="irACrearTarea()" 
                 style="background-color: black; color: white; padding: 5px 15px; font-weight: bold; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
           <span>+</span> Nueva Tarea
         </button>
       </div>
-      <!--  FIN DEL BOTÓN -->
+      <!-- FIN DEL BOTÓN -->
 
       <div class="control-item">
         <span class="icon">🔍</span>
@@ -49,22 +49,14 @@
       </div>
     </div>
 
-    <!-- ACCIONES DERECHA -->
+    <!-- ACCIONES DERECHA (LIMPIO SIN RELOJ) -->
     <div class="right-actions">
       <div class="pill-toggle">
         <button class="pill-btn active">✓ Tareas</button>
         <button class="pill-btn">ⓧ Completado</button>
       </div>
       <div class="control-item" title="Classroom"><span class="icon">🏫</span></div>
-      <div class="cabecera-calendario">
-    <div class="contenedor-reloj-pequeno">
-      <app-reloj-analogico></app-reloj-analogico>
-  </div>
-</div>
-
-<div class="grid-calendario">
-   ...
-</div>
+      <div class="control-item"><span class="icon">🕒</span></div>
     </div>
   </header>
 
