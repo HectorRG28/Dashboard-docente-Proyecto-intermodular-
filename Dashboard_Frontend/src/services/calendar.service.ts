@@ -30,4 +30,7 @@ export class CalendarService {
   deleteActividad(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/actividades-evaluables/${id}`);
   }
+  updateActividad(id: number, actividad: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/actividades-evaluables/${id}`, actividad);
+  }
 }

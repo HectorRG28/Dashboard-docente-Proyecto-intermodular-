@@ -1,54 +1,65 @@
-/* --- CONTENEDOR PRINCIPAL --- */
-.settings-card {
-  background-color: #ffffff; /* Fondo blanco */
-  border: 1px solid #000000; /* Borde negro simple */
-  padding: 15px;
-  width: 280px;
-  font-family: sans-serif;
-  color: #000000;
-  /* Sin sombras ni bordes redondeados complejos */
+// --- COLORES (Blanco y Negro) ---
+$bg-color: #ffffff;        /* Fondo blanco puro */
+$text-color: #000000;      /* Texto negro puro */
+$toggle-active: #000000;   /* El interruptor se pone NEGRO al activarse (antes era morado) */
+$btn-border: #000000;      /* Borde negro para botones */
+
+.ajustes-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background-color: $bg-color;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Filas de opciones */
+.main-title {
+  font-size: 2.5rem;
+  color: $text-color;
+  letter-spacing: 4px;
+  margin-bottom: 50px;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-bottom: 2px solid $text-color; /* Un detalle minimalista: subrayado negro */
+  padding-bottom: 10px;
+}
+
+.settings-card {
+  width: 100%;
+  max-width: 400px;
+}
+
 .setting-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  font-size: 0.9rem;
-  border-bottom: 1px dashed #ccc; /* Separador sutil opcional */
-  padding-bottom: 10px;
+  margin-bottom: 40px;
+  
+  &.column-layout {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
 
-.setting-row:last-child {
-  margin-bottom: 0;
-  border-bottom: none;
-}
-
-.control-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.icon-small {
+.label-text {
   font-size: 1.2rem;
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: $text-color;
+  text-transform: uppercase;
 }
 
-/* --- SLIDER DE BRILLO --- */
-.brightness-slider {
-  width: 80px;
-  cursor: pointer;
-  /* Se verá como el slider por defecto del navegador (gris/negro) */
-}
-
-/* --- INTERRUPTOR MODO OSCURO --- */
+/* --- INTERRUPTOR (TOGGLE) B&N --- */
 .switch {
   position: relative;
   display: inline-block;
-  width: 40px;
-  height: 20px;
-  border: 1px solid #000; /* Borde para que se vea la caja */
+  width: 60px;
+  height: 30px;
+  border: 2px solid $text-color; /* Borde negro alrededor */
+  border-radius: 34px; /* Opcional: si lo quieres cuadrado quita esto */
 }
 
 .switch input { 
@@ -61,56 +72,110 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #fff; /* Fondo blanco apagado */
-  transition: .2s;
+  background-color: transparent; /* Fondo transparente por defecto */
+  transition: .4s;
+  border-radius: 34px;
 }
 
-/* El círculo del interruptor */
 .slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
-  left: 2px;
-  bottom: 2px;
-  background-color: #000; /* Círculo negro */
-  transition: .2s;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: $text-color; /* La bolita es negra */
+  transition: .4s;
+  border-radius: 50%;
 }
 
-/* ESTADO ACTIVO: Se pone negro o gris oscuro */
+/* Cuando se activa */
 input:checked + .slider {
-  background-color: #999; /* Gris medio al activarse */
+  background-color: $toggle-active; /* El fondo se rellena de negro */
 }
 
 input:checked + .slider:before {
-  transform: translateX(20px);
-  background-color: #fff; /* Círculo blanco al activarse */
+  transform: translateX(30px);
+  background-color: #ffffff; /* La bolita se vuelve blanca para contrastar */
 }
 
-/* --- BOTONES FORMATO HORA (12h / 24h) --- */
+/* --- BOTONES DE HORARIO (B&N) --- */
 .format-toggles {
   display: flex;
-  gap: 0; /* Pegados */
-  border: 1px solid #000;
+  gap: 0; /* Pegados como en tu código original, o sepáralos con '20px' */
+  border: 2px solid $text-color; /* Marco general */
+  border-radius: 8px; /* Bordes un poco redondeados */
+  overflow: hidden; /* Para que el borde redondeado corte las esquinas */
+  
+  button {
+    background-color: #ffffff;
+    border: none;
+    border-right: 1px solid $text-color; /* Línea separadora */
+    padding: 10px 30px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: $text-color;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-width: 80px;
+
+    &:last-child {
+      border-right: none;
+    }
+
+    &:hover {
+      background-color: #f0f0f0; /* Un gris muy clarito al pasar el ratón */
+    }
+
+    /* Estado activo: INVERSIÓN DE COLORES */
+    &.active {
+      background-color: $text-color; /* Fondo Negro */
+      color: #ffffff;                /* Texto Blanco */
+    }
+  }
 }
 
-.format-toggles button {
-  border: none;
-  border-right: 1px solid #000;
-  background: #fff;
-  padding: 5px 10px;
-  cursor: pointer;
-  font-size: 0.8rem;
-  color: #000;
-}
+/* --- MODO OSCURO GLOBAL (Inversión total) --- */
+/* Esto define cómo se ve esta página cuando activas el modo oscuro */
+:host-context(body.dark-theme) {
+  .ajustes-wrapper {
+    background-color: #000000; /* Fondo Negro */
+  }
+  .main-title, .label-text {
+    color: #ffffff; /* Texto Blanco */
+    border-color: #ffffff;
+  }
+  
+  /* El borde del switch se vuelve blanco */
+  .switch {
+    border-color: #ffffff;
+  }
+  .slider:before {
+    background-color: #ffffff; /* Bolita blanca */
+  }
+  input:checked + .slider {
+    background-color: #ffffff; /* Fondo blanco al activar */
+  }
+  input:checked + .slider:before {
+    background-color: #000000; /* Bolita negra al activar */
+  }
 
-.format-toggles button:last-child {
-  border-right: none;
-}
+  /* Botones horario en modo oscuro */
+  .format-toggles {
+    border-color: #ffffff;
+    button {
+      background-color: #000000;
+      color: #ffffff;
+      border-right-color: #ffffff;
+      
+      &:hover {
+        background-color: #333;
+      }
 
-/* ESTADO ACTIVO: Inversión de colores (Negro con texto blanco) */
-.format-toggles button.active {
-  background-color: #000; 
-  color: #fff;
-  font-weight: bold;
+      &.active {
+        background-color: #ffffff;
+        color: #000000;
+      }
+    }
+  }
 }

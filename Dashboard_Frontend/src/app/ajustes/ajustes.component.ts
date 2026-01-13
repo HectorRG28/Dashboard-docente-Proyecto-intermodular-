@@ -1,30 +1,64 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-ajustes',
   templateUrl: './ajustes.component.html',
   styleUrls: ['./ajustes.component.scss']
 })
-export class AjustesComponent {
+export class AjustesComponent implements OnInit {
 
-  // --- VARIABLES ---
+  // Variables de estado
   isDarkMode: boolean = false;
-  timeFormat: string = '12h';
+  timeFormat: string = '24h'; // Por defecto 24h
 
   constructor() { }
 
+  ngOnInit(): void {
+    // AL INICIAR: Leemos la memoria del navegador
+    this.cargarPreferencias();
+    this.aplicarTema();
+  }
+
   // --- FUNCIONES ---
-  
-  // Esta es la función que busca tu HTML para el modo oscuro
+
   toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-    console.log('Modo oscuro:', this.isDarkMode);
+    this.aplicarTema();
+    this.guardarPreferencias();
   }
 
-  // Esta es la función para el formato de hora
   setFormat(format: string) {
     this.timeFormat = format;
-    console.log('Formato hora:', this.timeFormat);
+    this.guardarPreferencias();
+    console.log('Formato cambiado a:', this.timeFormat);
   }
 
+  // --- LÓGICA INTERNA (PRIVADA) ---
+
+  // Pinta la web de negro si está activado
+  private aplicarTema() {
+    if (this.isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }
+
+  // Guarda en la memoria del navegador
+  private guardarPreferencias() {
+    localStorage.setItem('preferencias_usuario', JSON.stringify({
+      modo: this.isDarkMode,
+      formato: this.timeFormat
+    }));
+  }
+
+  // Recupera de la memoria
+  private cargarPreferencias() {
+    const memoria = localStorage.getItem('preferencias_usuario');
+    if (memoria) {
+      const datos = JSON.parse(memoria);
+      this.isDarkMode = datos.modo;
+      this.timeFormat = datos.formato;
+    }
+  }
 }

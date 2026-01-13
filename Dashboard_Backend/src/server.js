@@ -1,125 +1,76 @@
 // src/server.js
 // ----------------------------------------------------------
-// Punto de entrada del servidor HTTP.
-// Configura Express, los middlewares globales, define
-// rutas básicas y monta las rutas de recursos.
+// Servidor PRINCIPAL corregido
 // ----------------------------------------------------------
 
-// 1. DECLARACIONES
-let express;                         // Paquete 'express'
-let cors;                            // Paquete 'cors'
-let app;                             // Aplicación de Express
+const express = require('express');
+const cors = require('cors');
 
-let DEFAULT_PORT;                    // Puerto por defecto
-let ENV_PORT;                        // Puerto definido en variables de entorno
-let PORT;                            // Puerto final del servidor
+const app = express();
 
-let jsonMiddleware;                  // Middleware para parsear JSON
-let corsMiddleware;                  // Middleware para permitir CORS
+const DEFAULT_PORT = 3000;
+// Si tienes un archivo .env, lo cogerá, si no usa el 3000
+const PORT = process.env.PORT || DEFAULT_PORT; 
 
-let rootHandler;                     // Handler GET '/'
-let pingHandler;                     // Handler GET '/ping'
-let startServer;                     // Función que inicia el servidor
+app.use(express.json());
+app.use(cors());
 
-// Routers de cada recurso
-let usuariosRouter;                  // Router para /usuarios
-let cursosRouter;                    // Router para /cursos
-let gruposRouter;                    // Router para /grupos
-let periodosRouter;                  // Router para /periodos
-let modulosRouter;                   // Router para /modulos
-let tiposActividadRouter;            // Router para /tipos-actividad
-let estadosActividadRouter;          // Router para /estados-actividad
-let asignacionesDocentesRouter;      // Router para /asignaciones-docentes
-let actividadesEvaluablesRouter;     // Router para /actividades-evaluables
-let matriculasRouter;                // Router para /matriculas
-let calificacionesRouter;            // Router para /calificaciones
+// --- 1. IMPORTACIÓN DE ROUTERS ---
+const usuariosRouter              = require('./routes/usuarios.routes');
+const cursosRouter                = require('./routes/cursos.routes');
+const gruposRouter                = require('./routes/grupos.routes');
+const periodosRouter              = require('./routes/periodos.routes');
+const modulosRouter               = require('./routes/modulos.routes');
+const tiposActividadRouter        = require('./routes/tiposActividad.routes');
+const estadosActividadRouter      = require('./routes/estadosActividad.routes');
+const asignacionesDocentesRouter  = require('./routes/asignacionesDocentes.routes');
+const actividadesEvaluablesRouter = require('./routes/actividadesEvaluables.routes');
+const matriculasRouter            = require('./routes/matriculas.routes');
+const calificacionesRouter        = require('./routes/calificaciones.routes');
 
+// OJO: Si tienes un archivo de rutas para aulas, impórtalo aquí. 
+// Si no lo tienes creado aún, comenta esta línea o dará error.
+// const aulasRouter = require('./routes/aulas.routes'); 
 
-// 2. ASIGNACIONES
-express = require('express');
-cors = require('cors');
+// --- 2. REGISTRO DE RUTAS CON EL PREFIJO '/api' ---
+// Esto es lo que faltaba para que Angular las encuentre
+app.use('/api/usuarios', usuariosRouter);
+app.use('/api/cursos', cursosRouter);
+app.use('/api/grupos', gruposRouter);
+app.use('/api/periodos', periodosRouter);
+app.use('/api/modulos', modulosRouter);
+app.use('/api/tipos-actividad', tiposActividadRouter);
+app.use('/api/estados-actividad', estadosActividadRouter);
+app.use('/api/asignaciones-docentes', asignacionesDocentesRouter);
 
-app = express();
+// IMPORTANTE: Aquí corregimos el nombre para que coincida con lo que busca Angular
+app.use('/api/actividades-evaluables', actividadesEvaluablesRouter); 
+app.use('/api/actividades', actividadesEvaluablesRouter); // Pongo las dos por si acaso en Angular llamas a una u otra
+app.use('/api/matriculas', matriculasRouter);
+app.use('/api/calificaciones', calificacionesRouter);
 
-DEFAULT_PORT = 3000;
-ENV_PORT = process.env.PORT;
-PORT = ENV_PORT || DEFAULT_PORT;
-
-jsonMiddleware = express.json();
-corsMiddleware = cors();
-
-// Importación de routers
-usuariosRouter              = require('./routes/usuarios.routes');
-cursosRouter                = require('./routes/cursos.routes');
-gruposRouter                = require('./routes/grupos.routes');
-periodosRouter              = require('./routes/periodos.routes');
-modulosRouter               = require('./routes/modulos.routes');
-tiposActividadRouter        = require('./routes/tiposActividad.routes');
-estadosActividadRouter      = require('./routes/estadosActividad.routes');
-asignacionesDocentesRouter  = require('./routes/asignacionesDocentes.routes');
-actividadesEvaluablesRouter = require('./routes/actividadesEvaluables.routes');
-matriculasRouter            = require('./routes/matriculas.routes');
-calificacionesRouter        = require('./routes/calificaciones.routes');
-
-
-// 3. REGISTRO DE MIDDLEWARES
-app.use(jsonMiddleware);
-app.use(corsMiddleware);
-
-
-// 4. HANDLERS BÁSICOS
-rootHandler = function (req, res) {
-  res.json({
-    ok: true,
-    mensaje: 'Backend dashboard_docente funcionando correctamente 🚀',
-    version: '1.0.0'
-  });
-};
-
-pingHandler = function (req, res) {
-  res.json({
-    ok: true,
-    mensaje: 'pong'
-  });
-};
+// --- RUTA EXTRA PARA AULAS (Si no tienes archivo de rutas aun) ---
+// Si no tienes 'src/routes/aulas.routes.js', descomenta esto para que el desplegable no falle:
+/*
+app.get('/api/aulas', (req, res) => {
+    // Simulación de aulas si no hay tabla
+    res.json([
+        { id: 1, nombre: 'Aula 101' },
+        { id: 2, nombre: 'Aula 102' },
+        { id: 3, nombre: 'Informática 1' }
+    ]);
+});
+*/
+// Si YA tienes el archivo aulas.routes.js y la tabla en BD, usa:
+// app.use('/api/aulas', aulasRouter);
 
 
-// 5. REGISTRO DE RUTAS DE LA API
-app.get('/', rootHandler);
-app.get('/ping', pingHandler);
+// --- 3. TEST DE VIDA ---
+app.get('/', (req, res) => {
+  res.json({ ok: true, mensaje: 'API Dashboard Docente Online 🚀' });
+});
 
-app.use('/usuarios', usuariosRouter);
-app.use('/cursos', cursosRouter);
-app.use('/grupos', gruposRouter);
-app.use('/periodos', periodosRouter);
-app.use('/modulos', modulosRouter);
-app.use('/tipos-actividad', tiposActividadRouter);
-app.use('/estados-actividad', estadosActividadRouter);
-app.use('/asignaciones-docentes', asignacionesDocentesRouter);
-app.use('/actividades-evaluables', actividadesEvaluablesRouter);
-app.use('/matriculas', matriculasRouter);
-app.use('/calificaciones', calificacionesRouter);
-
-
-// 6. FUNCIÓN PARA ARRANCAR EL SERVIDOR
-startServer = function () {
-  app.listen(PORT, function () {
-    console.log('Servidor HTTP escuchando en el puerto ' + PORT);
-  });
-};
-
-
-// 7. EJECUCIÓN
-startServer();
-
-
-
-
-
-
-
-
-
-
-
-
+// --- 4. ARRANQUE ---
+app.listen(PORT, () => {
+  console.log(`✅ Servidor corriendo en: http://localhost:${PORT}/api/`);
+});

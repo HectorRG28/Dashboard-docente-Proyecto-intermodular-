@@ -7,21 +7,25 @@ import { CrearTareaComponent } from './crear-tarea/crear-tarea.component';
 import { CalendarioSemanalComponent } from './calendario-semanal/calendario-semanal.component';
 
 const routes: Routes = [
-  // 1. REDIRECCIÓN AUTOMÁTICA:
-  // Al entrar a la web vacía (localhost:4200), te manda directo al calendario/dashboard
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  // 1. REDIRECCIÓN AUTOMÁTICA (CAMBIO CLAVE):
+  // Antes iba a /dashboard. Ahora le decimos que vaya a /horario nada más entrar.
+  { path: '', redirectTo: '/horario', pathMatch: 'full' },
 
-  // Ruta del Dashboard (Calendario Mensual)
-  { path: 'dashboard', component: CalendarioComponent },
+  // 2. RUTA PRINCIPAL (TU NUEVO HORARIO):
+  // He renombrado el path 'semanal' a 'horario' para que quede más profesional en la URL.
+  // Aquí es donde cargaremos la vista de Lunes a Viernes.
+  { path: 'horario', component: CalendarioSemanalComponent },
 
-  // Ruta para crear tareas (donde te lleva el botón nuevo)
+  // 3. RUTA SECUNDARIA (EL CALENDARIO ANTIGUO):
+  // He cambiado 'dashboard' por 'calendario-mensual'.
+  // Así cumples el requisito de tener una vista mensual separada.
+  { path: 'calendario-mensual', component: CalendarioComponent },
+
+  // Ruta para crear tareas (se mantiene igual)
   { path: 'crear-tarea', component: CrearTareaComponent },
 
-  // Ruta para calendario semanal (si la usas)
-  { path: 'semanal', component: CalendarioSemanalComponent },
-
-  // Cualquier ruta desconocida te devuelve al dashboard
-  { path: '**', redirectTo: '/dashboard' }
+  // Cualquier ruta desconocida te devuelve al horario principal
+  { path: '**', redirectTo: '/horario' }
 ];
 
 @NgModule({

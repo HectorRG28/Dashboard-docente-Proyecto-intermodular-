@@ -1,28 +1,175 @@
-<div class="schedule-container">
-
-  <div class="top-label">Tareas pendientes y calificación</div>
-
-  <div class="header-row">
-    <div class="header-cell time-header"></div>
-    
-    <div class="header-cell day-header" *ngFor="let dia of diasSemana">
-      {{ dia }}
+<div class="layout-wrapper">
+  
+    <aside class="sidebar">
+      <h2 class="app-title">Mi Calendario</h2>
+      
+      <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
+  
+      <div class="mini-calendar-container">
+        <div class="mini-header">
+          <button (click)="cambiarMes(-1)">‹</button>
+          <span>{{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}</span>
+          <button (click)="cambiarMes(1)">›</button>
+        </div>
+        
+        <div class="mini-week-header">
+          <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+        </div>
+  
+        <div class="mini-days-grid">
+          <div *ngFor="let dia of diasMiniCalendario" 
+               class="mini-day" 
+               [class.active-day]="dia.esHoy"
+               (click)="!dia.esHueco && seleccionarDia(dia.numero)">
+            {{ dia.numero }}
+          </div>
+        </div>
+      </div>
+  
+      <nav class="menu-lateral">
+        <ul>
+          <li routerLink="/calendario" routerLinkActive="active">📅 Calendario</li>
+          <li>📝 Notas</li> 
+          <li (click)="abrirAjustes()" style="cursor: pointer;">⚙️ Ajustes</li>
+        </ul>
+      </nav>
+    </aside>
+  
+    <main class="main-content">
+      
+      <div class="top-bar">
+        <h1>Horario Semanal</h1>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn-aulas" (click)="verAulasLibres()">🔍 Aulas Libres</button>
+            <button class="btn-simple" (click)="seleccionarDia(fechaActual.getDate())">Hoy</button>
+        </div>
+      </div>
+  
+      <div class="semana-grid">
+        <div class="dia-col" *ngFor="let dia of diasCabecera; let i = index">
+          <div class="dia-titulo">
+            {{ dia.nombre }} <span class="numero-dia">{{ dia.numero }}</span>
+          </div>
+          
+          <div class="dia-contenido">
+            <div *ngFor="let t of getListaPorIndice(i)" class="tarea-card" (click)="abrirModalVer(t)">
+              <div class="card-header">
+                <span class="hora">{{ t.hora }}</span>
+                
+                <span *ngIf="t.aula" class="aula-badge">{{ t.aula }}</span>
+  
+                <div class="acciones">
+                  <button class="btn-icon editar" (click)="abrirModalEditarDirecto($event, t)">✏️</button>
+                  <button class="btn-icon borrar" (click)="borrarTareaDirecta($event, t.id)">🗑️</button>
+                </div>
+              </div>
+              <div class="card-body">{{ t.titulo }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+    </main>
+  </div>
+  
+  <div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      
+      <div class="modal-header">
+        <h2>
+          {{ modoModal === 'CREAR' ? 'Nueva Tarea' : (modoModal === 'EDITAR' ? 'Editar Tarea' : 'Detalles') }}
+        </h2>
+        <button class="close-btn" (click)="cerrarModal()">×</button>
+      </div>
+      
+      <div *ngIf="modoModal === 'VER' && tareaSeleccionada" class="modal-body ver-detalles">
+        <h3>{{ tareaSeleccionada.titulo }}</h3>
+        
+        <div class="detalle-row"><strong>📅 Hora:</strong> {{ tareaSeleccionada.hora }}</div>
+        
+        <div class="detalle-row" *ngIf="tareaSeleccionada.aula">
+            <strong>🏫 Aula:</strong> {{ tareaSeleccionada.aula }}
+        </div>
+  
+        <div class="detalle-row">
+          <strong>📝 Descripción:</strong>
+          <p class="desc-box">{{ tareaSeleccionada.descripcion || 'Sin descripción' }}</p>
+        </div>
+  
+        <div class="modal-actions">
+           <button class="btn-secondary" (click)="activarModoEdicion()">✏️ Editar</button>
+           <button class="btn-danger" (click)="borrarTareaDesdeModal()">🗑️ Borrar</button>
+        </div>
+      </div>
+  
+      <div *ngIf="modoModal === 'CREAR' || modoModal === 'EDITAR'" class="modal-body">
+        <form (ngSubmit)="guardarTarea()">
+            <label>Título:</label>
+            <input type="text" [(ngModel)]="formularioTarea.titulo" name="titulo" required placeholder="Ej: Examen Tema 1">
+            
+            <label>Aula:</label>
+            <input type="text" [(ngModel)]="formularioTarea.aula" name="aula" placeholder="Ej: Aula 201">
+  
+            <label>Descripción:</label>
+            <textarea [(ngModel)]="formularioTarea.descripcion" name="descripcion" rows="3"></textarea>
+  
+            <div class="row-inputs">
+                <div class="half">
+                    <label>Fecha:</label>
+                    <input type="date" [(ngModel)]="formularioTarea.fecha" name="fecha" required>
+                </div>
+                <div class="half">
+                    <label>Hora Inicio:</label>
+                    <input type="time" [(ngModel)]="formularioTarea.horaInicio" name="horaInicio" required>
+                </div>
+            </div>
+  
+            <label>Módulo:</label>
+            <select [(ngModel)]="formularioTarea.id_modulo_seleccionado" name="modulo" required>
+                <option [ngValue]="null" disabled>Selecciona un módulo...</option>
+                <option *ngFor="let m of listaModulos" [value]="m.id_modulo">{{ m.nombre || m.nombre_modulo }}</option>
+            </select>
+  
+            <label>Tipo:</label>
+            <select [(ngModel)]="formularioTarea.id_tipo" name="tipo" required>
+                <option [ngValue]="null" disabled>Selecciona un tipo...</option>
+                <option *ngFor="let t of listaTipos" [value]="t.id_tipo">{{ t.nombre || t.tipo }}</option>
+            </select>
+  
+            <div class="modal-actions right">
+                <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+                <button type="submit" class="btn-save">Guardar</button>
+            </div>
+        </form>
+      </div>
+  
     </div>
   </div>
 
-  <div class="scroll-body custom-scrollbar">
-    
-    <div class="time-row" *ngFor="let hora of horas">
-      
-      <div class="time-label">
-        {{ hora }}
-      </div>
-
-      <div class="grid-cell" *ngFor="let dia of diasSemana" (click)="clickCelda(dia, hora)">
+  <div class="modal-overlay" *ngIf="modalAjustesAbierto" (click)="cerrarAjustes()" style="z-index: 10000;">
+    <div class="modal-ajustes-content" (click)="$event.stopPropagation()">
+        
+        <div class="modal-header-ajustes">
+            <h2>CONFIGURACIÓN</h2>
+            <button class="close-btn" (click)="cerrarAjustes()">×</button>
         </div>
 
+        <div class="ajustes-body">
+            <div class="setting-row">
+                <span class="label-text">MODO OSCURO</span>
+                <label class="switch">
+                    <input type="checkbox" (change)="toggleDarkMode()" [checked]="isDarkMode">
+                    <span class="slider round"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <span class="label-text">FORMATO HORARIO</span>
+                <div class="format-toggles">
+                    <button [class.active]="timeFormat === '12h'" (click)="setFormat('12h')">12 H</button>
+                    <button [class.active]="timeFormat === '24h'" (click)="setFormat('24h')">24 H</button>
+                </div>
+            </div>
+        </div>
     </div>
-
-  </div>
-
 </div>
