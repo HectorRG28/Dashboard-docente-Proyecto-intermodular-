@@ -273,3 +273,11 @@
     .switch { border-color: #fff; } .slider:before { background-color: #fff; } input:checked + .slider { background-color: #fff; } input:checked + .slider:before { background-color: #000; }
     .format-toggles { border-color: #fff; button { background: #000; color: #fff; border-right-color: #fff; &.active { background: #fff; color: #000; } } }
 }
+.btn-nav {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #555;
+  &:hover { color: #000; }
+}

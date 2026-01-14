@@ -1,175 +1,169 @@
 <div class="layout-wrapper">
   
-    <aside class="sidebar">
-      <h2 class="app-title">Mi Calendario</h2>
-      
-      <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
-  
-      <div class="mini-calendar-container">
-        <div class="mini-header">
-          <button (click)="cambiarMes(-1)">‹</button>
-          <span>{{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}</span>
-          <button (click)="cambiarMes(1)">›</button>
-        </div>
-        
-        <div class="mini-week-header">
-          <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
-        </div>
-  
-        <div class="mini-days-grid">
-          <div *ngFor="let dia of diasMiniCalendario" 
-               class="mini-day" 
-               [class.active-day]="dia.esHoy"
-               (click)="!dia.esHueco && seleccionarDia(dia.numero)">
-            {{ dia.numero }}
-          </div>
+  <aside class="sidebar">
+    <h2 class="app-title" (click)="irAHoy()">📅 Mi Horario</h2>
+    <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
+
+    <div class="mini-calendar-container">
+      <div class="mini-header">
+        <button (click)="cambiarMes(-1)">‹</button>
+        <span>{{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}</span>
+        <button (click)="cambiarMes(1)">›</button>
+      </div>
+      <div class="mini-week-header">
+        <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+      </div>
+      <div class="mini-days-grid">
+        <div *ngFor="let dia of diasMiniCalendario" 
+             class="mini-day" 
+             [class.selected-day]="dia.esSeleccionado" 
+             [class.today-day]="dia.esHoy"
+             (click)="!dia.esHueco && seleccionarDia(dia.numero)">
+          {{ dia.numero }}
         </div>
       </div>
-  
-      <nav class="menu-lateral">
-        <ul>
-          <li routerLink="/calendario" routerLinkActive="active">📅 Calendario</li>
-          <li>📝 Notas</li> 
-          <li (click)="abrirAjustes()" style="cursor: pointer;">⚙️ Ajustes</li>
-        </ul>
-      </nav>
-    </aside>
-  
-    <main class="main-content">
-      
-      <div class="top-bar">
-        <h1>Horario Semanal</h1>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn-aulas" (click)="verAulasLibres()">🔍 Aulas Libres</button>
-            <button class="btn-simple" (click)="seleccionarDia(fechaActual.getDate())">Hoy</button>
-        </div>
-      </div>
-  
-      <div class="semana-grid">
-        <div class="dia-col" *ngFor="let dia of diasCabecera; let i = index">
-          <div class="dia-titulo">
-            {{ dia.nombre }} <span class="numero-dia">{{ dia.numero }}</span>
-          </div>
-          
-          <div class="dia-contenido">
-            <div *ngFor="let t of getListaPorIndice(i)" class="tarea-card" (click)="abrirModalVer(t)">
-              <div class="card-header">
-                <span class="hora">{{ t.hora }}</span>
-                
-                <span *ngIf="t.aula" class="aula-badge">{{ t.aula }}</span>
-  
-                <div class="acciones">
-                  <button class="btn-icon editar" (click)="abrirModalEditarDirecto($event, t)">✏️</button>
-                  <button class="btn-icon borrar" (click)="borrarTareaDirecta($event, t.id)">🗑️</button>
-                </div>
-              </div>
-              <div class="card-body">{{ t.titulo }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-  
-    </main>
-  </div>
-  
-  <div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      
-      <div class="modal-header">
-        <h2>
-          {{ modoModal === 'CREAR' ? 'Nueva Tarea' : (modoModal === 'EDITAR' ? 'Editar Tarea' : 'Detalles') }}
-        </h2>
-        <button class="close-btn" (click)="cerrarModal()">×</button>
-      </div>
-      
-      <div *ngIf="modoModal === 'VER' && tareaSeleccionada" class="modal-body ver-detalles">
-        <h3>{{ tareaSeleccionada.titulo }}</h3>
-        
-        <div class="detalle-row"><strong>📅 Hora:</strong> {{ tareaSeleccionada.hora }}</div>
-        
-        <div class="detalle-row" *ngIf="tareaSeleccionada.aula">
-            <strong>🏫 Aula:</strong> {{ tareaSeleccionada.aula }}
-        </div>
-  
-        <div class="detalle-row">
-          <strong>📝 Descripción:</strong>
-          <p class="desc-box">{{ tareaSeleccionada.descripcion || 'Sin descripción' }}</p>
-        </div>
-  
-        <div class="modal-actions">
-           <button class="btn-secondary" (click)="activarModoEdicion()">✏️ Editar</button>
-           <button class="btn-danger" (click)="borrarTareaDesdeModal()">🗑️ Borrar</button>
-        </div>
-      </div>
-  
-      <div *ngIf="modoModal === 'CREAR' || modoModal === 'EDITAR'" class="modal-body">
-        <form (ngSubmit)="guardarTarea()">
-            <label>Título:</label>
-            <input type="text" [(ngModel)]="formularioTarea.titulo" name="titulo" required placeholder="Ej: Examen Tema 1">
-            
-            <label>Aula:</label>
-            <input type="text" [(ngModel)]="formularioTarea.aula" name="aula" placeholder="Ej: Aula 201">
-  
-            <label>Descripción:</label>
-            <textarea [(ngModel)]="formularioTarea.descripcion" name="descripcion" rows="3"></textarea>
-  
-            <div class="row-inputs">
-                <div class="half">
-                    <label>Fecha:</label>
-                    <input type="date" [(ngModel)]="formularioTarea.fecha" name="fecha" required>
-                </div>
-                <div class="half">
-                    <label>Hora Inicio:</label>
-                    <input type="time" [(ngModel)]="formularioTarea.horaInicio" name="horaInicio" required>
-                </div>
-            </div>
-  
-            <label>Módulo:</label>
-            <select [(ngModel)]="formularioTarea.id_modulo_seleccionado" name="modulo" required>
-                <option [ngValue]="null" disabled>Selecciona un módulo...</option>
-                <option *ngFor="let m of listaModulos" [value]="m.id_modulo">{{ m.nombre || m.nombre_modulo }}</option>
-            </select>
-  
-            <label>Tipo:</label>
-            <select [(ngModel)]="formularioTarea.id_tipo" name="tipo" required>
-                <option [ngValue]="null" disabled>Selecciona un tipo...</option>
-                <option *ngFor="let t of listaTipos" [value]="t.id_tipo">{{ t.nombre || t.tipo }}</option>
-            </select>
-  
-            <div class="modal-actions right">
-                <button type="button" class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
-                <button type="submit" class="btn-save">Guardar</button>
-            </div>
-        </form>
-      </div>
-  
     </div>
-  </div>
 
-  <div class="modal-overlay" *ngIf="modalAjustesAbierto" (click)="cerrarAjustes()" style="z-index: 10000;">
-    <div class="modal-ajustes-content" (click)="$event.stopPropagation()">
-        
-        <div class="modal-header-ajustes">
-            <h2>CONFIGURACIÓN</h2>
-            <button class="close-btn" (click)="cerrarAjustes()">×</button>
-        </div>
+    <nav class="menu-lateral">
+      <ul>
+        <li (click)="irACalendario()">🗓️ Calendario Mensual</li>
+        <li (click)="abrirAjustes()">⚙️ Configuración</li>
+      </ul>
+    </nav>
+  </aside>
 
-        <div class="ajustes-body">
-            <div class="setting-row">
-                <span class="label-text">MODO OSCURO</span>
-                <label class="switch">
-                    <input type="checkbox" (change)="toggleDarkMode()" [checked]="isDarkMode">
-                    <span class="slider round"></span>
-                </label>
-            </div>
-
-            <div class="setting-row">
-                <span class="label-text">FORMATO HORARIO</span>
-                <div class="format-toggles">
-                    <button [class.active]="timeFormat === '12h'" (click)="setFormat('12h')">12 H</button>
-                    <button [class.active]="timeFormat === '24h'" (click)="setFormat('24h')">24 H</button>
-                </div>
-            </div>
-        </div>
+  <main class="main-content">
+    <div class="top-bar">
+      <h1>Semana del {{ diasCabecera[0]?.numero }}</h1>
+      <button class="btn-simple" (click)="irAHoy()">Volver a Hoy</button>
     </div>
+
+    <div class="semana-grid">
+      <div class="dia-col" *ngFor="let dia of diasCabecera; let i = index">
+        <div class="dia-titulo">
+          <span class="dia-nombre">{{ dia.nombre }}</span> 
+          <span class="dia-num">{{ dia.numero }}</span>
+        </div>
+        
+        <div class="dia-contenido">
+          <div *ngFor="let t of getListaPorIndice(i)" class="tarea-card" (click)="abrirModalVer(t)">
+            <div class="card-header-mini">
+              <span class="hora">{{ t.hora }}</span>
+              <span class="aula-badge" *ngIf="t.aula">{{ t.aula }}</span>
+            </div>
+            <div class="card-body">{{ t.titulo }}</div>
+            <div class="acciones-mini">
+                <button class="btn-icon" (click)="abrirModalEditarDirecto($event, t)">✏️</button>
+                <button class="btn-icon" (click)="borrarTareaDirecta($event, t.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </div>
+
+<div class="modal-overlay" *ngIf="modalAjustesAbierto" (click)="cerrarAjustes()">
+  <div class="modal-content settings-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header"><h2>Configuración</h2><button class="close-btn" (click)="cerrarAjustes()">×</button></div>
+    <div class="modal-body">
+      <div class="setting-row">
+        <span>Modo Oscuro</span>
+        <label class="switch"><input type="checkbox" [checked]="isDarkMode" (change)="toggleDarkMode()"><span class="slider round"></span></label>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <div class="modal-content task-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ modoModal === 'CREAR' ? 'Nueva Tarea' : (modoModal === 'EDITAR' ? 'Editar' : 'Detalles') }}</h2>
+      <button class="close-btn" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body" *ngIf="modoModal === 'VER' && tareaSeleccionada">
+      <h3>{{ tareaSeleccionada.titulo }}</h3>
+      <p><strong>Hora:</strong> {{ tareaSeleccionada.hora }}</p>
+      <p><strong>Aula:</strong> {{ tareaSeleccionada.aula || 'Sin aula' }}</p>
+      <p>{{ tareaSeleccionada.descripcion }}</p>
+      <div class="modal-footer">
+        <button class="btn-primary" (click)="activarModoEdicion()">Editar</button>
+        <button class="btn-danger" (click)="borrarTareaDesdeModal()">Borrar</button>
+      </div>
+    </div>
+
+    <div class="modal-body" *ngIf="modoModal === 'CREAR' || modoModal === 'EDITAR'">
+      <form (ngSubmit)="guardarTarea()">
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" [(ngModel)]="formularioTarea.titulo" name="titulo" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group half"><label>Fecha</label><input type="date" [(ngModel)]="formularioTarea.fecha" name="fecha" required></div>
+          <div class="form-group half"><label>Hora</label><input type="time" [(ngModel)]="formularioTarea.horaInicio" name="hora" required></div>
+        </div>
+        
+        <div class="form-row">
+           <div class="form-group half">
+             <label>Aula</label>
+             <input type="text" [(ngModel)]="formularioTarea.aula" name="aula" placeholder="Ej: A102">
+           </div>
+           <div class="form-group half">
+             <label>Tipo</label>
+             <select [(ngModel)]="formularioTarea.id_tipo" name="tipo">
+               <option *ngFor="let t of listaTipos" [value]="t.id_tipo">{{ t.nombre || t.tipo }}</option>
+             </select>
+           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Módulo</label>
+          <select [(ngModel)]="formularioTarea.id_modulo_seleccionado" name="modulo">
+            <option *ngFor="let m of listaModulos" [value]="m.id_modulo">{{ m.nombre || m.nombre_modulo }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="formularioTarea.descripcion" name="desc"></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ESTILO PARA EL DÍA SELECCIONADO (LO QUE NO SALÍA ANTES) */
+  .selected-day {
+    background-color: #2196F3 !important;
+    color: white !important;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+  
+  /* ESTILO AULA EN TARJETA */
+  .aula-badge {
+    font-size: 0.8em;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+
+  /* RESTO DE ESTILOS BÁSICOS PARA QUE NO SE VEA MAL */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+  .modal-content { background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; color: #333; }
+  .form-row { display: flex; gap: 10px; }
+  .half { flex: 1; }
+  .form-group { margin-bottom: 10px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+  .modal-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+  .close-btn { border: none; background: none; font-size: 20px; cursor: pointer; }
+  .btn-save { background: #4CAF50; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 4px; }
+</style>
