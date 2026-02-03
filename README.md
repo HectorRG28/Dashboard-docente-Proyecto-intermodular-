@@ -1,107 +1,145 @@
- Arquitectura del Proyecto: Dashboard Docente
+# 🎓 Dashboard Docente - Proyecto Intermodular
 
-Este documento detalla la estructura técnica del proyecto, explicando la función de los archivos clave y cómo se comunican el Frontend, el Backend y la Base de Datos.
+Este proyecto es una aplicación web completa diseñada para la gestión de actividades docentes. Permite a los profesores planificar, visualizar y gestionar actividades evaluables a través de una interfaz moderna basada en calendarios.
 
- 1. Backend y Base de Datos
+El sistema utiliza una arquitectura **Full Stack** separando claramente el Frontend y el Backend.
 
- Conexión Backend - Base de Datos
+---
 
-Archivo: src/db/pool.js
+## 🚀 Tecnologías Utilizadas
 
-Función: (Archivo conector Backend ↔ Base de Datos).
+### Frontend (Cliente)
 
-Utiliza la librería mysql2 para crear un Pool de Conexiones con la base de datos MySQL (dashboard_docente).
+- **Framework**: [Angular v16](https://angular.io/)
+- **Lenguaje**: TypeScript
+- **Estilos**: CSS3 moderno
+- **Comunicación**: HTTP Client (API Rest)
 
-Importancia: Sin este archivo, el servidor no tiene acceso a los datos. Se utiliza un "Pool" en lugar de una conexión simple para mantener conexiones abiertas y reutilizables, mejorando drásticamente la eficiencia.
+### Backend (Servidor)
 
- El Servidor
+- **Runtime**: [Node.js](https://nodejs.org/)
+- **Framework**: [Express.js](https://expressjs.com/)
+- **Gestión de Base de Datos**: MySQL2
+- **Utilidades**:
+  - `xlsx` (Procesamiento de archivos Excel)
+  - `multer` (Subida de archivos)
+  - `cors` (Gestión de acceso entre dominios)
 
-Archivo: Dashboard_Backend/index.js
+### Base de Datos
 
-Función: Punto de entrada de la aplicación.
+- **Motor**: MySQL
+- **Nombre por defecto**: `dashboard_docente`
 
-Levanta el servidor en el puerto 3000.
+---
 
-Habilita CORS (imprescindible para permitir peticiones desde Angular).
+## ✨ Características Principales
 
-Carga y activa las rutas de la API.
+- **📅 Vista de Calendario**: Visualización interactiva de las actividades evaluables del mes.
+- **📝 Gestión de Tareas**: Crear, leer, actualizar y eliminar (CRUD) actividades evaluables.
+- **📂 Importación de Datos**: Capacidad para importar datos masivos desde archivos Excel.
+- **🏷️ Categorización**: Gestión de tipos de actividades y módulos asignados.
+- **🔗 Arquitectura Desacoplada**: comunicación vía API RESTful entre Angular y Node.js.
 
-Lógica de Negocio (Controladores)
+---
 
-Archivo: src/controllers/actividadesEvaluables.controller.js
+## 🛠️ Requisitos Previos
 
-Función: Contiene las funciones que ejecutan las sentencias SQL reales:
+Asegúrate de tener instalado lo siguiente en tu sistema:
 
-createActividad: Ejecuta INSERT INTO...
+- [Node.js](https://nodejs.org/) (versión LTS recomendada)
+- [MySQL Server](https://dev.mysql.com/downloads/mysql/) (o XAMPP/WAMP/MAMP)
+- [Angular CLI](https://angular.io/cli) (`npm install -g @angular/cli`)
 
-getActividades: Ejecuta SELECT * FROM...
+---
 
-deleteActividad: Ejecuta DELETE FROM...
+## ⚙️ Instalación y Configuración
 
- Rutas (Enrutador)
+Sigue estos pasos para poner en marcha el proyecto:
 
-Archivo: src/routes/actividadesEvaluables.routes.js
+### 1. Clonar el Repositorio
 
-Función: Gestiona el tráfico de la API.
+```bash
+git clone <url-del-repositorio>
+cd Dashboard-docente-Proyecto-intermodular--1
+```
 
-Asocia la petición GET / con la función getActividades.
+### 2. Configurar el Backend (Servidor)
 
-Asocia la petición POST / con la función createActividad.
+```bash
+cd Dashboard_Backend
+npm install
+```
 
- 2. Frontend (Angular)
+**Configuración de Base de Datos:**
+El sistema espera una base de datos MySQL llamada `dashboard_docente`.
+El archivo de configuración se encuentra en `Dashboard_Backend/src/db/config.js`. Los valores por defecto son:
 
- Conexión Frontend - Backend (El Puente)
+- **Host**: localhost
+- **Usuario**: root
+- **Contraseña**: (vacía)
+- **Puerto**: 3306
 
-Archivo: src/app/services/calendar.service.ts
+Si tu configuración de MySQL es diferente, puedes ajustar este archivo o usar variables de entorno.
 
-Función: (Archivo conector Frontend ↔ Backend).
+### 3. Configurar el Frontend (Angular)
 
-Define la dirección del servidor: http://localhost:3000/api.
+```bash
+cd ../Dashboard_Frontend
+npm install
+```
 
-Utiliza el módulo HttpClient de Angular para enviar las peticiones (GET, POST, DELETE) hacia el servidor Node.js.
+---
 
- Navegación (Routing)
+## ▶️ Ejecución del Proyecto
 
-Archivo: src/app/app-routing.module.ts
+Necesitarás dos terminales abiertas para ejecutar el proyecto completo (una para el backend y otra para el frontend).
 
-Función: Convierte la web en una SPA (Single Page Application).
+### Terminal 1: Iniciar Backend
 
-Gestiona la navegación virtual sin recargar la página completa.
+```bash
+cd Dashboard_Backend
+npm start
+```
 
-Redirige automáticamente la ruta vacía '' hacia /dashboard (Calendario) y habilita la ruta /crear-tarea.
+_El servidor debería arrancar en `http://localhost:3000` y mostrar "✅ Base de datos conectada correctamente"._
 
- Vista Principal (Calendario)
+### Terminal 2: Iniciar Frontend
 
-Archivo: src/app/calendario/calendario.component.ts
+```bash
+cd Dashboard_Frontend
+ng serve
+```
 
-Función: Lógica visual del calendario.
+_Una vez compilado, abre tu navegador en `http://localhost:4200`._
 
-ngOnInit: Llama al servicio para traer los datos reales.
+---
 
-Calcula los días del mes para pintar la cuadrícula.
+## 📂 Estructura del Proyecto
 
-Gestiona la función borrarTarea capturando el ID del evento.
+```
+/
+├── Dashboard_Backend/      # Servidor API Node.js/Express
+│   ├── src/
+│   │   ├── config/         # Configuraciones de DB
+│   │   ├── controllers/    # Lógica de negocio
+│   │   ├── routes/         # Definición de endpoints API
+│   │   ├── db/             # Conexión a Base de Datos
+│   │   └── server.js       # Punto de entrada del servidor
+│   └── package.json
+│
+├── Dashboard_Frontend/     # Aplicación Cliente Angular
+│   ├── src/
+│   │   ├── app/            # Componentes, Servicios y Modelos
+│   │   └── assets/         # Imágenes y recursos estáticos
+│   └── angular.json
+│
+└── README.md               # Documentación del proyecto
+```
 
- Formulario de Creación
+## 🤝 Contribución
 
-Archivo: src/app/crear-tarea/crear-tarea.component.ts
+Las contribuciones son bienvenidas. Por favor, abre un issue primero para discutir lo que te gustaría cambiar.
 
-Función: Gestión de nuevas tareas.
+---
 
-Dinámico: Carga los desplegables de "Módulos" y "Tipos" directamente desde la BD 
-
-Empaqueta los datos en un JSON y los envía al servicio.
-
- Preguntas Clave de Arquitectura
-
-¿Qué archivo une Node.js (Backend) y MySQL (Base de Datos)?
-
-El archivo src/db/pool.js. Es el responsable de abrir el canal de comunicación usando las credenciales y la librería mysql2.
-
-¿Qué archivo une Angular (Frontend) y Node.js (Backend)?
-
-La comunicación es vía HTTP:
-
-En el Frontend, el responsable es calendar.service.ts (lanza la petición a localhost:3000).
-
-En el Backend, la petición entra por index.js (que la permite gracias a CORS) y es dirigida por el sistema de rutas hacia el controlador.
+Generado automáticamente por Antigravity.
