@@ -1,7 +1,5 @@
 <div class="main-container">
-
   <div class="task-card">
-    
     <div class="tabs-header">
       <button class="tab-btn active">fecha y hora</button>
       <button class="tab-btn" (click)="abrirPopup()">duración</button>
@@ -12,26 +10,31 @@
     <h2 class="title">Nueva Tarea</h2>
 
     <div class="card-body">
-      
       <div class="form-column">
-        
         <div class="input-group">
           <label>Nombre del evento:</label>
-          <input type="text" class="wireframe-input" [(ngModel)]="nuevaTarea.titulo" placeholder="Ej: Examen Tema 1">
+          <input
+            type="text"
+            class="wireframe-input"
+            [(ngModel)]="nuevaTarea.titulo"
+            placeholder="Ej: Examen Tema 1"
+          />
         </div>
 
-        <div style="display: flex; gap: 10px;">
-          
-          <div class="input-group" style="flex: 1;">
+        <div style="display: flex; gap: 10px">
+          <div class="input-group" style="flex: 1">
             <label>Módulo:</label>
-            <select class="wireframe-input" [(ngModel)]="nuevaTarea.id_modulo_seleccionado">
+            <select
+              class="wireframe-input"
+              [(ngModel)]="nuevaTarea.id_modulo_seleccionado"
+            >
               <option *ngFor="let m of listaModulos" [value]="m.id_modulo">
                 {{ m.nombre_modulo }}
               </option>
             </select>
           </div>
 
-          <div class="input-group" style="flex: 1;">
+          <div class="input-group" style="flex: 1">
             <label>Tipo:</label>
             <select class="wireframe-input" [(ngModel)]="nuevaTarea.id_tipo">
               <option *ngFor="let t of listaTipos" [value]="t.id_tipo">
@@ -39,33 +42,57 @@
               </option>
             </select>
           </div>
-
         </div>
 
-        <div style="display: flex; gap: 10px;">
-          <div class="input-group" style="flex: 1;">
+        <div style="display: flex; gap: 10px">
+          <div class="input-group" style="flex: 1">
             <label>Fecha:</label>
-            <input type="date" class="wireframe-input" [(ngModel)]="nuevaTarea.fecha">
+            <input
+              type="date"
+              class="wireframe-input"
+              [(ngModel)]="nuevaTarea.fecha"
+            />
           </div>
-          <div class="input-group" style="flex: 1;">
-            <label>Hora:</label>
-            <input type="time" class="wireframe-input" [(ngModel)]="nuevaTarea.horaInicio">
+          <div class="input-group" style="flex: 1">
+            <label>Hora Inicio:</label>
+            <input
+              type="time"
+              class="wireframe-input"
+              [(ngModel)]="nuevaTarea.horaInicio"
+            />
+          </div>
+          <div class="input-group" style="flex: 1">
+            <label>Hora Fin:</label>
+            <input
+              type="time"
+              class="wireframe-input"
+              [(ngModel)]="nuevaTarea.horaFin"
+            />
           </div>
         </div>
 
         <div class="input-group">
           <label>Descripción:</label>
-          <textarea class="wireframe-input area-input" [(ngModel)]="nuevaTarea.descripcion"></textarea>
+          <textarea
+            class="wireframe-input area-input"
+            [(ngModel)]="nuevaTarea.descripcion"
+          ></textarea>
         </div>
 
-        <div style="margin-top: 20px; text-align: right;">
-          <button class="action-btn" 
-                  style="background: black; color: white; padding: 10px 20px; font-weight: bold;" 
-                  (click)="guardarTarea()">
+        <div style="margin-top: 20px; text-align: right">
+          <button
+            class="action-btn"
+            style="
+              background: black;
+              color: white;
+              padding: 10px 20px;
+              font-weight: bold;
+            "
+            (click)="guardarTarea()"
+          >
             GUARDAR TAREA
           </button>
         </div>
-
       </div>
 
       <div class="calendar-column">
@@ -74,7 +101,6 @@
           <div class="mini-cell" *ngFor="let i of [].constructor(20)"></div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -82,12 +108,13 @@
     <div class="popup-card">
       <h3>Duración:</h3>
       <div class="input-group">
-        <select class="wireframe-input"><option>30 min</option></select>
+        <select class="wireframe-input">
+          <option>30 min</option>
+        </select>
       </div>
       <div class="actions">
         <button class="action-btn" (click)="cerrarPopup()">Aceptar</button>
       </div>
     </div>
   </div>
-
 </div>

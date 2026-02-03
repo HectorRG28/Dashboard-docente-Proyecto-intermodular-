@@ -33,4 +33,14 @@ export class CalendarService {
   updateActividad(id: number, actividad: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/actividades-evaluables/${id}`, actividad);
   }
+
+  importFile(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`${this.apiUrl}/import/file`, formData);
+  }
+
+  importWeb(url: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/import/web`, { url });
+  }
 }

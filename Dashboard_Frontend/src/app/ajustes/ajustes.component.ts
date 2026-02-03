@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-ajustes',
@@ -7,58 +8,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AjustesComponent implements OnInit {
 
-  // Variables de estado
-  isDarkMode: boolean = false;
-  timeFormat: string = '24h'; // Por defecto 24h
+  @Input() embed: boolean = false; // Si es true, se muestra en versión "mini" para modal
 
-  constructor() { }
+  isDarkMode: boolean = false;
+  timeFormat: string = '24h';
+
+  constructor(private themeService: ThemeService) { }
 
   ngOnInit(): void {
-    // AL INICIAR: Leemos la memoria del navegador
-    this.cargarPreferencias();
-    this.aplicarTema();
+    // Nos suscribimos al servicio para estar sincronizados
+    this.themeService.isDarkMode$.subscribe(val => this.isDarkMode = val);
+    this.themeService.timeFormat$.subscribe(val => this.timeFormat = val);
   }
-
-  // --- FUNCIONES ---
 
   toggleDarkMode() {
-    this.isDarkMode = !this.isDarkMode;
-    this.aplicarTema();
-    this.guardarPreferencias();
+    this.themeService.toggleDarkMode();
   }
 
-  setFormat(format: string) {
-    this.timeFormat = format;
-    this.guardarPreferencias();
-    console.log('Formato cambiado a:', this.timeFormat);
-  }
-
-  // --- LÓGICA INTERNA (PRIVADA) ---
-
-  // Pinta la web de negro si está activado
-  private aplicarTema() {
-    if (this.isDarkMode) {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
-    }
-  }
-
-  // Guarda en la memoria del navegador
-  private guardarPreferencias() {
-    localStorage.setItem('preferencias_usuario', JSON.stringify({
-      modo: this.isDarkMode,
-      formato: this.timeFormat
-    }));
-  }
-
-  // Recupera de la memoria
-  private cargarPreferencias() {
-    const memoria = localStorage.getItem('preferencias_usuario');
-    if (memoria) {
-      const datos = JSON.parse(memoria);
-      this.isDarkMode = datos.modo;
-      this.timeFormat = datos.formato;
-    }
+  setFormat(format: '12h' | '24h') {
+    this.themeService.setTimeFormat(format);
   }
 }

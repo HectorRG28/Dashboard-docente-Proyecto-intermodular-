@@ -19,7 +19,8 @@ export class CrearTareaComponent implements OnInit {
     titulo: '',
     descripcion: '',
     fecha: '',       
-    horaInicio: '',  
+    horaInicio: '',
+    horaFin: '',  
     id_modulo_seleccionado: null, // Guardamos el ID del modulo
     id_tipo: null
   };
@@ -57,13 +58,13 @@ export class CrearTareaComponent implements OnInit {
 
   guardarTarea() {
     if (!this.nuevaTarea.titulo || !this.nuevaTarea.fecha || 
-        !this.nuevaTarea.horaInicio || !this.nuevaTarea.id_modulo_seleccionado || !this.nuevaTarea.id_tipo) {
+        !this.nuevaTarea.horaInicio || !this.nuevaTarea.horaFin || !this.nuevaTarea.id_modulo_seleccionado || !this.nuevaTarea.id_tipo) {
       alert('Por favor, completa todos los campos.');
       return;
     }
 
     const fechaInicioSQL = `${this.nuevaTarea.fecha} ${this.nuevaTarea.horaInicio}:00`;
-    const fechaFinSQL = fechaInicioSQL; 
+    const fechaFinSQL = `${this.nuevaTarea.fecha} ${this.nuevaTarea.horaFin}:00`; 
 
     
     const payload = {

@@ -1,6 +1,6 @@
-<div class="ajustes-wrapper">
+<div class="ajustes-wrapper" [class.embedded]="embed">
   
-  <h1 class="main-title">CONFIGURACIÓN</h1>
+  <h1 class="main-title" *ngIf="!embed">CONFIGURACIÓN</h1>
 
   <div class="settings-card">
     

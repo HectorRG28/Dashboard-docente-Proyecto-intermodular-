@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-calendario-semanal',
@@ -20,9 +21,15 @@ export class CalendarioSemanalComponent implements OnInit {
   modalAbierto: boolean = false;
   modoModal: 'VER' | 'CREAR' | 'EDITAR' = 'VER';
   modalAjustesAbierto: boolean = false;
+  modalImportAbierto: boolean = false; // Nuevo
+  pestanaImport: 'ARCHIVO' | 'WEB' = 'ARCHIVO'; // Nuevo
+  archivoSeleccionado: File | null = null; // Nuevo
+  urlImport: string = 'https://nuevaspro.edupage.org/timetable/'; // Default user url
+
   tareaSeleccionada: any = null;
   
-  isDarkMode: boolean = false;
+  // isDarkMode: boolean = false; // Eliminado por ThemeService
+  timeFormat: '12h' | '24h' = '24h';
   listaModulos: any[] = [];
   listaTipos: any[] = [];
 
@@ -31,14 +38,18 @@ export class CalendarioSemanalComponent implements OnInit {
     id: null as number | null,
     titulo: '', descripcion: '', 
     aula: '', // <--- IMPORTANTE
-    fecha: '', horaInicio: '', id_modulo_seleccionado: null as number | null, id_tipo: null as number | null
+    fecha: '', horaInicio: '', horaFin: '', id_modulo_seleccionado: null as number | null, id_tipo: null as number | null
   };
 
-  constructor(private calendarService: CalendarService, private router: Router) {}
+  constructor(private calendarService: CalendarService, private router: Router, private themeService: ThemeService) {}
 
   ngOnInit(): void {
-    this.cargarPreferencias();
-    this.aplicarTema();
+    // this.cargarPreferencias(); // Eliminado
+    // this.aplicarTema(); // Eliminado
+    this.themeService.timeFormat$.subscribe((fmt: '12h' | '24h') => {
+      this.timeFormat = fmt;
+      this.cargarDatosSemana(); // Recargar para aplicar formato
+    });
     this.cargarDesplegables();
     this.irAHoy(); 
   }
@@ -143,7 +154,7 @@ export class CalendarioSemanalComponent implements OnInit {
           titulo: t.titulo || t.nombre_modulo,
           aula: t.aula, // Recuperado
           descripcion: t.descripcion,
-          hora: f.getHours().toString().padStart(2,'0') + ':' + f.getMinutes().toString().padStart(2,'0'),
+          hora: this.formatTime(f),
           original: t
         };
         const d = f.getDay();
@@ -178,12 +189,13 @@ export class CalendarioSemanalComponent implements OnInit {
 
   guardarTarea() {
     const fSQL = `${this.formularioTarea.fecha} ${this.formularioTarea.horaInicio}:00`;
+    const fSQLFin = this.formularioTarea.horaFin ? `${this.formularioTarea.fecha} ${this.formularioTarea.horaFin}:00` : fSQL; // Si no hay fin, igual a inicio
     // INCLUIMOS AULA EN EL PAYLOAD
     const p = {
       titulo: this.formularioTarea.titulo,
       descripcion: this.formularioTarea.descripcion,
       aula: this.formularioTarea.aula, 
-      fecha_inicio: fSQL, fecha_fin: fSQL,
+      fecha_inicio: fSQL, fecha_fin: fSQLFin,
       id_tipo: this.formularioTarea.id_tipo, id_asignacion: this.formularioTarea.id_modulo_seleccionado,
       id_estado: 1, creado_por: 1
     };
@@ -199,31 +211,73 @@ export class CalendarioSemanalComponent implements OnInit {
   activarModoEdicion() { this.cargarDatosEnFormulario(this.tareaSeleccionada); this.modoModal = 'EDITAR'; }
   borrarTareaDesdeModal() { this.calendarService.deleteActividad(this.tareaSeleccionada.id).subscribe(() => { this.cerrarModal(); this.cargarDatosSemana(); }); }
 
-  toggleDarkMode() { 
-    this.isDarkMode = !this.isDarkMode; 
-    this.aplicarTema();
-    localStorage.setItem('dark-mode', JSON.stringify(this.isDarkMode));
+  // toggleDarkMode() { ... } // Eliminado
+  // private aplicarTema() { ... } // Eliminado
+  
+  private formatTime(date: Date): string {
+    if (this.timeFormat === '24h') {
+      return date.getHours().toString().padStart(2,'0') + ':' + date.getMinutes().toString().padStart(2,'0');
+    } else {
+      const hours = date.getHours();
+      const minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'PM' : 'AM';
+      const hours12 = hours % 12 || 12;
+      return `${hours12}:${minutes.toString().padStart(2,'0')} ${ampm}`;
+    }
   }
-
-  private aplicarTema() { 
-    if(this.isDarkMode) document.body.classList.add('dark-theme');
-    else document.body.classList.remove('dark-theme');
-  }
-  private cargarPreferencias() { this.isDarkMode = JSON.parse(localStorage.getItem('dark-mode') || 'false'); }
+  // private cargarPreferencias() { ... } // Eliminado
   private cargarDesplegables() {
     this.calendarService.getModulos().subscribe(m => this.listaModulos = m);
     this.calendarService.getTipos().subscribe(t => this.listaTipos = t);
   }
   private resetearFormulario() {
-    this.formularioTarea = { id: null, titulo: '', descripcion: '', aula: '', fecha: this.fechaSeleccionada.toISOString().split('T')[0], horaInicio: '09:00', id_modulo_seleccionado: null, id_tipo: null };
+    this.formularioTarea = { id: null, titulo: '', descripcion: '', aula: '', fecha: this.fechaSeleccionada.toISOString().split('T')[0], horaInicio: '09:00', horaFin: '', id_modulo_seleccionado: null, id_tipo: null };
   }
   private cargarDatosEnFormulario(t: any) {
     const o = t.original || t;
     const f = new Date(o.fecha_inicio);
+    const fFin = new Date(o.fecha_fin || o.fecha_inicio);
     this.formularioTarea = { 
       id: o.id_actividad || o.id, titulo: o.titulo, descripcion: o.descripcion, 
       aula: o.aula, // RECUPERADO AL CARGAR
-      fecha: f.toISOString().split('T')[0], horaInicio: f.getHours().toString().padStart(2, '0') + ':' + f.getMinutes().toString().padStart(2, '0'), id_modulo_seleccionado: o.id_asignacion, id_tipo: o.id_tipo 
+      fecha: f.toISOString().split('T')[0], 
+      horaInicio: f.getHours().toString().padStart(2, '0') + ':' + f.getMinutes().toString().padStart(2, '0'), 
+      horaFin: fFin.getHours().toString().padStart(2, '0') + ':' + fFin.getMinutes().toString().padStart(2, '0'),
+      id_modulo_seleccionado: o.id_asignacion, id_tipo: o.id_tipo 
     };
+  }
+
+  // IMPORTAR
+  abrirImport() { this.modalImportAbierto = true; }
+  cerrarImport() { this.modalImportAbierto = false; }
+  cambiarPestanaImport(p: 'ARCHIVO' | 'WEB') { this.pestanaImport = p; }
+  
+  onFileSelected(event: any) {
+    if (event.target.files.length > 0) {
+      this.archivoSeleccionado = event.target.files[0];
+    }
+  }
+
+  confirmarImportarArchivo() {
+    if (!this.archivoSeleccionado) return alert('Selecciona un archivo primero');
+    this.calendarService.importFile(this.archivoSeleccionado).subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        this.cerrarImport();
+        this.cargarDatosSemana();
+      },
+      error: (e: any) => alert('Error: ' + (e.error?.message || e.message))
+    });
+  }
+
+  confirmarImportarWeb() {
+    if (!this.urlImport) return alert('Ingesa una URL');
+    this.calendarService.importWeb(this.urlImport).subscribe({
+      next: (res: any) => {
+        alert(res.message);
+        this.cerrarImport();
+      },
+      error: (e: any) => alert('Error: ' + (e.error?.message || e.message))
+    });
   }
 }

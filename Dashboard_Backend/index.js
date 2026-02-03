@@ -19,6 +19,7 @@ app.use(express.json());
 app.use('/api/actividades-evaluables', actividadesRoutes);
 app.use('/api/tipos-actividad', tiposRoutes);
 app.use('/api/modulos', modulosRoutes);
+app.use('/api/import', require('./src/routes/import.routes.js'));
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

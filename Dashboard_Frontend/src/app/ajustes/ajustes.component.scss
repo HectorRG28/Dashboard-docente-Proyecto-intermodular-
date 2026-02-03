@@ -1,8 +1,8 @@
 // --- COLORES (Blanco y Negro) ---
-$bg-color: #ffffff;        /* Fondo blanco puro */
-$text-color: #000000;      /* Texto negro puro */
-$toggle-active: #000000;   /* El interruptor se pone NEGRO al activarse (antes era morado) */
-$btn-border: #000000;      /* Borde negro para botones */
+$bg-color: #ffffff; /* Fondo blanco puro */
+$text-color: #000000; /* Texto negro puro */
+$toggle-active: #000000; /* El interruptor se pone NEGRO al activarse (antes era morado) */
+$btn-border: #000000; /* Borde negro para botones */
 
 .ajustes-wrapper {
   display: flex;
@@ -12,8 +12,23 @@ $btn-border: #000000;      /* Borde negro para botones */
   padding: 40px 20px;
   background-color: $bg-color;
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  transition: background-color 0.3s, color 0.3s;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+
+  &.embedded {
+    min-height: auto;
+    padding: 0;
+    background-color: transparent !important;
+
+    .settings-card {
+      max-width: 100%;
+    }
+    .setting-row {
+      margin-bottom: 20px;
+    }
+  }
 }
 
 .main-title {
@@ -37,7 +52,7 @@ $btn-border: #000000;      /* Borde negro para botones */
   justify-content: space-between;
   align-items: center;
   margin-bottom: 40px;
-  
+
   &.column-layout {
     flex-direction: column;
     gap: 20px;
@@ -62,7 +77,7 @@ $btn-border: #000000;      /* Borde negro para botones */
   border-radius: 34px; /* Opcional: si lo quieres cuadrado quita esto */
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;
@@ -71,9 +86,12 @@ $btn-border: #000000;      /* Borde negro para botones */
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background-color: transparent; /* Fondo transparente por defecto */
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 34px;
 }
 
@@ -85,7 +103,7 @@ $btn-border: #000000;      /* Borde negro para botones */
   left: 3px;
   bottom: 3px;
   background-color: $text-color; /* La bolita es negra */
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 50%;
 }
 
@@ -106,7 +124,7 @@ input:checked + .slider:before {
   border: 2px solid $text-color; /* Marco general */
   border-radius: 8px; /* Bordes un poco redondeados */
   overflow: hidden; /* Para que el borde redondeado corte las esquinas */
-  
+
   button {
     background-color: #ffffff;
     border: none;
@@ -130,7 +148,7 @@ input:checked + .slider:before {
     /* Estado activo: INVERSIÓN DE COLORES */
     &.active {
       background-color: $text-color; /* Fondo Negro */
-      color: #ffffff;                /* Texto Blanco */
+      color: #ffffff; /* Texto Blanco */
     }
   }
 }
@@ -141,11 +159,12 @@ input:checked + .slider:before {
   .ajustes-wrapper {
     background-color: #000000; /* Fondo Negro */
   }
-  .main-title, .label-text {
+  .main-title,
+  .label-text {
     color: #ffffff; /* Texto Blanco */
     border-color: #ffffff;
   }
-  
+
   /* El borde del switch se vuelve blanco */
   .switch {
     border-color: #ffffff;
@@ -167,7 +186,7 @@ input:checked + .slider:before {
       background-color: #000000;
       color: #ffffff;
       border-right-color: #ffffff;
-      
+
       &:hover {
         background-color: #333;
       }

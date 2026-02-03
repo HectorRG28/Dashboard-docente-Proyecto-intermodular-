@@ -2,7 +2,10 @@
   
   <aside class="sidebar">
     <h2 class="app-title" (click)="irAHoy()">📅 Mi Horario</h2>
-    <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
+    <div style="display: flex; gap: 5px;">
+      <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
+      <button class="btn-crear" style="background:#ff9800" (click)="abrirImport()">Importar</button>
+    </div>
 
     <div class="mini-calendar-container">
       <div class="mini-header">
@@ -63,14 +66,12 @@
   </main>
 </div>
 
+<!-- MODAL AJUSTES (USANDO COMPONENTE COMPARTIDO) -->
 <div class="modal-overlay" *ngIf="modalAjustesAbierto" (click)="cerrarAjustes()">
   <div class="modal-content settings-modal" (click)="$event.stopPropagation()">
     <div class="modal-header"><h2>Configuración</h2><button class="close-btn" (click)="cerrarAjustes()">×</button></div>
     <div class="modal-body">
-      <div class="setting-row">
-        <span>Modo Oscuro</span>
-        <label class="switch"><input type="checkbox" [checked]="isDarkMode" (change)="toggleDarkMode()"><span class="slider round"></span></label>
-      </div>
+      <app-ajustes [embed]="true"></app-ajustes>
     </div>
   </div>
 </div>
@@ -102,7 +103,8 @@
         </div>
         <div class="form-row">
           <div class="form-group half"><label>Fecha</label><input type="date" [(ngModel)]="formularioTarea.fecha" name="fecha" required></div>
-          <div class="form-group half"><label>Hora</label><input type="time" [(ngModel)]="formularioTarea.horaInicio" name="hora" required></div>
+          <div class="form-group half"><label>Hora Inicio</label><input type="time" [(ngModel)]="formularioTarea.horaInicio" name="hora" required></div>
+          <div class="form-group half"><label>Hora Fin</label><input type="time" [(ngModel)]="formularioTarea.horaFin" name="horaFin"></div>
         </div>
         
         <div class="form-row">
@@ -138,7 +140,41 @@
   </div>
 </div>
 
+<div class="modal-overlay" *ngIf="modalImportAbierto" (click)="cerrarImport()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Importar Clases</h2>
+      <button class="close-btn" (click)="cerrarImport()">×</button>
+    </div>
+    
+    <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 2px solid #eee;">
+      <button [class.active-tab]="pestanaImport==='ARCHIVO'" (click)="cambiarPestanaImport('ARCHIVO')" style="flex:1; padding:10px; border:none; background:none; cursor:pointer; font-weight:bold;">Subir Archivo</button>
+      <button [class.active-tab]="pestanaImport==='WEB'" (click)="cambiarPestanaImport('WEB')" style="flex:1; padding:10px; border:none; background:none; cursor:pointer; font-weight:bold;">Internet</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="pestanaImport === 'ARCHIVO'">
+        <p>Selecciona un archivo Excel (.xlsx) o CSV para importar tus clases.</p>
+        <div class="form-group">
+          <input type="file" (change)="onFileSelected($event)" accept=".csv, .xlsx">
+        </div>
+        <button class="btn-save" (click)="confirmarImportarArchivo()">Subir e Importar</button>
+      </div>
+
+      <div *ngIf="pestanaImport === 'WEB'">
+        <p>Importar automáticamente desde una URL compatible (EduPage, etc).</p>
+        <div class="form-group">
+          <label>URL del Horario:</label>
+          <input type="text" [(ngModel)]="urlImport" placeholder="https://...">
+        </div>
+        <button class="btn-save" (click)="confirmarImportarWeb()">Buscar e Importar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <style>
+  .active-tab { border-bottom: 3px solid #2196F3 !important; color: #2196F3; }
   /* ESTILO PARA EL DÍA SELECCIONADO */
   .selected-day {
     background-color: #2196F3 !important;
