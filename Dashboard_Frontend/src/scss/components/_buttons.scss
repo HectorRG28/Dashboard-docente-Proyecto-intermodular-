@@ -1,0 +1,56 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &--primary {
+    background-color: $color-interactivo-principal;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: $color-hover-interactivo;
+    }
+
+    &:active:not(:disabled) {
+      background-color: $color-activo-interactivo;
+    }
+    
+    &:disabled {
+      background-color: $color-deshabilitado-interactivo;
+    }
+    
+    &:focus {
+        outline: none;
+        box-shadow: $sombra-foco-accesibilidad;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border: 2px solid $color-interactivo-principal;
+    color: $color-interactivo-principal;
+
+    &:hover:not(:disabled) {
+      background-color: rgba($color-interactivo-principal, 0.1);
+    }
+    
+    &:disabled {
+        border-color: $color-deshabilitado-interactivo;
+        color: $color-deshabilitado-interactivo;
+    }
+  }
+}

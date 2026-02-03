@@ -1,0 +1,16 @@
+// Configuración Global
+@use 'variables';
+@use 'mixins';
+@use 'reset';
+
+// Componentes
+@use 'components/buttons';
+@use 'components/cards';
+@use 'components/inputs';
+
+// Layout
+@use 'layout/header';
+@use 'layout/footer';
+
+// Pages
+@use 'pages/home';

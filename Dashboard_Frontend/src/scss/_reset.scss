@@ -1,0 +1,49 @@
+@use 'variables' as *;
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: $font-family-base;
+  background-color: $color-fondo-base;
+  color: $color-texto-principal;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: $color-texto-titulo-h1;
+  font-weight: 700;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  color: $color-texto-titulo-h1;
+}
+
+h2, h3 {
+  color: $color-texto-subtitulo;
+}
+
+a {
+  text-decoration: none;
+  color: $color-interactivo-principal;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $color-hover-interactivo;
+  }
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+ul, ol {
+  list-style: none;
+}

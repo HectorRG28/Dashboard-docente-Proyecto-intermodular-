@@ -1,0 +1,51 @@
+@use '../variables' as *;
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: $color-texto-secundario;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background-color: #fff;
+  color: $color-texto-principal;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $color-interactivo-principal;
+    box-shadow: 0 0 0 3px rgba($color-interactivo-principal, 0.1);
+  }
+
+  &::placeholder {
+    color: $color-texto-deshabilitado;
+  }
+  
+  &:disabled {
+      background-color: #f5f5f5;
+      cursor: not-allowed;
+  }
+}
+
+.form-hint {
+    font-size: 0.875rem;
+    color: $color-texto-secundario;
+    margin-top: 0.25rem;
+}
+
+.form-error {
+    font-size: 0.875rem;
+    color: $color-alerta-error;
+    margin-top: 0.25rem;
+}

@@ -1,0 +1,28 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.card {
+  @include card-base;
+  margin-bottom: 1.5rem;
+
+  &__header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+    
+    h3 {
+        margin-bottom: 0;
+        color: $color-texto-subtitulo;
+    }
+  }
+
+  &__body {
+    color: $color-texto-principal;
+  }
+  
+  &__footer {
+      border-top: 1px solid rgba(0,0,0,0.05);
+      padding-top: 1rem;
+      margin-top: 1rem;
+  }
+}

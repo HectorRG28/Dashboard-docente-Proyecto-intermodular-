@@ -1,0 +1,82 @@
+@use 'src/scss/variables' as *;
+@use 'src/scss/mixins' as *;
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.modal-container {
+  background-color: $color-fondo-tarjeta;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 500px;
+  overflow: hidden;
+  animation: slideIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.modal-header {
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+
+  h3 {
+    margin: 0;
+    color: white;
+  }
+
+  &.modal--error { background-color: $color-alerta-error; }
+  &.modal--warning { background-color: $color-alerta-advertencia; }
+  &.modal--success { background-color: $color-alerta-exito; }
+  &.modal--info { background-color: $color-alerta-info; }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.modal-body {
+  padding: 1.5rem;
+  color: $color-texto-principal;
+  font-size: 1.1rem;
+}
+
+.modal-footer {
+  padding: 1rem 1.5rem;
+  background-color: $color-fondo-base;
+  display: flex;
+  justify-content: flex-end;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

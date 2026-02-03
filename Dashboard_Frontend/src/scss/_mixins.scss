@@ -1,0 +1,47 @@
+@use 'variables' as *;
+
+// Mixins Responsivos (Mobile First)
+@mixin mobile {
+  @media (max-width: 767px) { @content; }
+}
+
+@mixin tablet {
+  @media (min-width: 768px) { @content; }
+}
+
+@mixin desktop {
+  @media (min-width: 1024px) { @content; }
+}
+
+// Flexbox Utilities
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Typography Utilities
+@mixin heading-style {
+  color: $color-texto-titulo-h1;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+// Card Style
+@mixin card-base {
+  background-color: $color-fondo-tarjeta;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1.5rem;
+}

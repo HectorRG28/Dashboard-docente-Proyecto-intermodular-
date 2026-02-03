@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CalendarService } from '../../services/calendar.service';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
+import { ModalService } from '../core/services/modal.service';
 
 @Component({
   selector: 'app-calendario-semanal',
@@ -41,7 +42,7 @@ export class CalendarioSemanalComponent implements OnInit {
     fecha: '', horaInicio: '', horaFin: '', id_modulo_seleccionado: null as number | null, id_tipo: null as number | null
   };
 
-  constructor(private calendarService: CalendarService, private router: Router, private themeService: ThemeService) {}
+  constructor(private calendarService: CalendarService, private router: Router, private themeService: ThemeService, private modalService: ModalService) {}
 
   ngOnInit(): void {
     // this.cargarPreferencias(); // Eliminado
@@ -259,25 +260,43 @@ export class CalendarioSemanalComponent implements OnInit {
   }
 
   confirmarImportarArchivo() {
-    if (!this.archivoSeleccionado) return alert('Selecciona un archivo primero');
+    if (!this.archivoSeleccionado) {
+      this.modalService.open('Por favor, selecciona un archivo primero.', 'warning');
+      return;
+    }
     this.calendarService.importFile(this.archivoSeleccionado).subscribe({
       next: (res: any) => {
-        alert(res.message);
+        this.modalService.open(res.message, 'success');
         this.cerrarImport();
         this.cargarDatosSemana();
       },
-      error: (e: any) => alert('Error: ' + (e.error?.message || e.message))
+      error: (e: any) => {
+        let mensaje = 'Error al importar el archivo.';
+        if (e.message.includes('Http failure')) mensaje = 'No se pudo conectar con el servidor de importación.';
+        else if (e.error?.message) mensaje = e.error.message;
+        
+        this.modalService.open(mensaje, 'error');
+      }
     });
   }
 
   confirmarImportarWeb() {
-    if (!this.urlImport) return alert('Ingesa una URL');
+    if (!this.urlImport) {
+        this.modalService.open('Por favor, ingresa una URL válida.', 'warning');
+        return;
+    }
     this.calendarService.importWeb(this.urlImport).subscribe({
       next: (res: any) => {
-        alert(res.message);
+        this.modalService.open(res.message, 'success');
         this.cerrarImport();
       },
-      error: (e: any) => alert('Error: ' + (e.error?.message || e.message))
+      error: (e: any) => {
+        let mensaje = 'Error al importar desde la web.';
+        if (e.message.includes('Http failure')) mensaje = 'No se pudo conectar con el servidor de importación (Error de conexión).';
+        else if (e.error?.message) mensaje = e.error.message;
+        
+        this.modalService.open(mensaje, 'error');
+      }
     });
   }
 }
