@@ -1,0 +1,42 @@
+/* Estilos para el modal de búsqueda de aulas */
+.search-results {
+  margin-top: 15px;
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  border-radius: 4px;
+}
+
+.search-results ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results li {
+  padding: 10px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.search-results li:hover {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.search-results li:last-child {
+  border-bottom: none;
+}
+
+.btn-search {
+  background-color: #9c27b0; /* Purple for search logic */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.btn-search:hover { background-color: #7b1fa2; }

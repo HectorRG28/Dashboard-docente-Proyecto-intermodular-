@@ -27,6 +27,7 @@ const asignacionesDocentesRouter  = require('./routes/asignacionesDocentes.route
 const actividadesEvaluablesRouter = require('./routes/actividadesEvaluables.routes');
 const matriculasRouter            = require('./routes/matriculas.routes');
 const calificacionesRouter        = require('./routes/calificaciones.routes');
+const authRouter                  = require('./routes/auth.routes');
 
 // OJO: Si tienes un archivo de rutas para aulas, impórtalo aquí. 
 // Si no lo tienes creado aún, comenta esta línea o dará error.
@@ -48,6 +49,7 @@ app.use('/api/actividades-evaluables', actividadesEvaluablesRouter);
 app.use('/api/actividades', actividadesEvaluablesRouter); // Pongo las dos por si acaso en Angular llamas a una u otra
 app.use('/api/matriculas', matriculasRouter);
 app.use('/api/calificaciones', calificacionesRouter);
+app.use('/api/auth', authRouter);
 
 // --- RUTA EXTRA PARA AULAS (Si no tienes archivo de rutas aun) ---
 // Si no tienes 'src/routes/aulas.routes.js', descomenta esto para que el desplegable no falle:
@@ -65,9 +67,29 @@ app.get('/api/aulas', (req, res) => {
 // app.use('/api/aulas', aulasRouter);
 
 
-// --- 3. TEST DE VIDA ---
-app.get('/', (req, res) => {
-  res.json({ ok: true, mensaje: 'API Dashboard Docente Online 🚀' });
+const path = require('path');
+
+// --- 3. SERVIR FRONTEND (PRODUCCIÓN) O REDIRIGIR (DESARROLLO) ---
+const frontendDistPath = path.join(__dirname, '../../Dashboard_Frontend/dist/dashboard-docente-pi');
+
+// 1. Servir ficheros estáticos si existen (Build de producción)
+app.use(express.static(frontendDistPath));
+
+// 2. Cualquier otra ruta -> Servir index.html (SPA) O Redirigir a Angular CLI (4200)
+app.get('*', (req, res) => {
+    // Si la petición pide un archivo (tiene extensión), pasamos (404 normal de API)
+    if (req.url.includes('.')) return res.sendStatus(404);
+
+    const indexHtml = path.join(frontendDistPath, 'index.html');
+    const fs = require('fs');
+
+    if (fs.existsSync(indexHtml)) {
+        res.sendFile(indexHtml);
+    } else {
+        // Modo Desarrollo: Si no hay build, redirigir al puerto de Angular
+        console.log(`⚠️ Redirigiendo ${req.url} al Frontend (4200)...`);
+        res.redirect(`http://localhost:4200${req.url}`);
+    }
 });
 
 // --- 4. ARRANQUE ---

@@ -1,0 +1,335 @@
+<div class="layout-wrapper">
+  
+  <aside class="sidebar">
+    <h2 class="app-title" (click)="irAHoy()">📅 Mi Horario</h2>
+    <div style="display: flex; gap: 5px;">
+      <button class="btn-crear" (click)="abrirModalCrear()">+ Crear Tarea</button>
+      <button class="btn-crear" style="background:#ff9800" (click)="abrirImport()">Importar</button>
+      <button class="btn-crear" style="background:#9c27b0" (click)="abrirBusqueda()">🔍 Buscar Aula</button>
+    </div>
+
+    <div class="mini-calendar-container">
+      <div class="mini-header">
+        <button (click)="cambiarMes(-1)">‹</button>
+        <span>{{ nombresMeses[mesActualVisual.getMonth()] }} {{ mesActualVisual.getFullYear() }}</span>
+        <button (click)="cambiarMes(1)">›</button>
+      </div>
+      <div class="mini-week-header">
+        <span>L</span><span>M</span><span>X</span><span>J</span><span>V</span><span>S</span><span>D</span>
+      </div>
+      <div class="mini-days-grid">
+        <div *ngFor="let dia of diasMiniCalendario" 
+             class="mini-day" 
+             [class.selected-day]="dia.esSeleccionado" 
+             [class.today-day]="dia.esHoy"
+             (click)="!dia.esHueco && seleccionarDia(dia.numero)">
+          {{ dia.numero }}
+        </div>
+      </div>
+    </div>
+
+    <nav class="menu-lateral">
+      <ul>
+        <li (click)="irACalendario()">🗓️ Calendario Mensual</li>
+        <li (click)="abrirModalMenciones()">🔔 Mis Menciones</li>
+        <li (click)="abrirAjustes()">⚙️ Configuración</li>
+        <li (click)="logout()" style="color: #f44336; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px;">🚪 Cerrar Sesión</li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <div class="top-bar">
+      <h1>Semana del {{ diasCabecera[0]?.numero }}</h1>
+      <button class="btn-simple" (click)="irAHoy()">Volver a Hoy</button>
+    </div>
+
+    <div class="semana-grid">
+      <div class="dia-col" *ngFor="let dia of diasCabecera; let i = index">
+        <div class="dia-titulo">
+          <span class="dia-nombre">{{ dia.nombre }}</span> 
+          <span class="dia-num">{{ dia.numero }}</span>
+        </div>
+        
+        <div class="dia-contenido">
+          <div *ngFor="let t of getListaPorIndice(i)" class="tarea-card" [class.task-mention]="t.esMencion" (click)="abrirModalVer(t)">
+            <div class="card-header-mini">
+              <span class="hora">{{ t.hora }}</span>
+              <span class="aula-badge" *ngIf="t.aula">{{ t.aula }}</span>
+            </div>
+            <div class="card-body">{{ t.titulo }}</div>
+            <div class="acciones-mini">
+                <button class="btn-icon" (click)="abrirModalEditarDirecto($event, t)">✏️</button>
+                <button class="btn-icon" (click)="borrarTareaDirecta($event, t.id)">🗑️</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- MODAL AJUSTES (USANDO COMPONENTE COMPARTIDO) -->
+<div class="modal-overlay" *ngIf="modalAjustesAbierto" (click)="cerrarAjustes()">
+  <div class="modal-content settings-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header"><h2>Configuración</h2><button class="close-btn" (click)="cerrarAjustes()">×</button></div>
+    <div class="modal-body">
+      <app-ajustes [embed]="true"></app-ajustes>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <div class="modal-content task-modal" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ modoModal === 'CREAR' ? 'Nueva Tarea' : (modoModal === 'EDITAR' ? 'Editar' : 'Detalles') }}</h2>
+      <button class="close-btn" (click)="cerrarModal()">×</button>
+    </div>
+
+    <div class="modal-body" *ngIf="modoModal === 'VER' && tareaSeleccionada">
+      <h3>{{ tareaSeleccionada.titulo }}</h3>
+      <p><strong>Hora:</strong> {{ tareaSeleccionada.hora }}</p>
+      <p><strong>Aula:</strong> {{ tareaSeleccionada.aula || 'Sin aula' }}</p>
+      <p *ngIf="tareaSeleccionada.original?.nombres_menciones"><strong>Menciones:</strong> {{ tareaSeleccionada.original.nombres_menciones }}</p>
+      <p>{{ tareaSeleccionada.descripcion }}</p>
+      
+      <div class="modal-footer-iconos">
+        <button class="btn-icon-grande" (click)="activarModoEdicion()" title="Editar">✏️</button>
+        <button class="btn-icon-grande" (click)="borrarTareaDesdeModal()" title="Borrar">🗑️</button>
+      </div>
+    </div>
+
+    <div class="modal-body" *ngIf="modoModal === 'CREAR' || modoModal === 'EDITAR'">
+      <form (ngSubmit)="guardarTarea()">
+        <div class="form-group">
+          <label>Título</label>
+          <input type="text" [(ngModel)]="formularioTarea.titulo" name="titulo" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group half"><label>Fecha</label><input type="date" [(ngModel)]="formularioTarea.fecha" name="fecha" required></div>
+          <div class="form-group half"><label>Hora Inicio</label><input type="time" [(ngModel)]="formularioTarea.horaInicio" name="hora" required></div>
+          <div class="form-group half"><label>Hora Fin</label><input type="time" [(ngModel)]="formularioTarea.horaFin" name="horaFin"></div>
+        </div>
+        
+        <div class="form-row">
+           <div class="form-group half">
+             <label>Aula</label>
+             <input type="text" [(ngModel)]="formularioTarea.aula" name="aula" placeholder="Ej: A102">
+           </div>
+           <div class="form-group half">
+             <label>Tipo</label>
+             <select [(ngModel)]="formularioTarea.id_tipo" name="tipo">
+               <option *ngFor="let t of listaTipos" [value]="t.id_tipo">{{ t.nombre_tipo || t.nombre || t.tipo }}</option>
+             </select>
+           </div>
+        </div>
+
+        <div class="form-group">
+          <label>Módulo</label>
+          <select [(ngModel)]="formularioTarea.id_modulo_seleccionado" name="modulo">
+            <option *ngFor="let m of listaModulos" [value]="m.id_modulo">{{ m.nombre || m.nombre_modulo }}</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea [(ngModel)]="formularioTarea.descripcion" name="desc"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Mencionar Docentes</label>
+            <input type="text" [(ngModel)]="filtroDocentes" [ngModelOptions]="{standalone: true}" placeholder="Buscar docente..." style="margin-bottom: 5px; padding: 5px; font-size: 0.9em;">
+            <div style="max-height: 100px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;">
+                <div *ngFor="let d of docentesFiltrados" style="margin-bottom: 3px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" 
+                               [checked]="esMencionado(d.id_usuario)" 
+                               (change)="toggleMencion(d.id_usuario)" 
+                               style="width: auto; margin-right: 8px;">
+                        {{ d.nombre }} {{ d.apellidos }}
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn-save">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalImportAbierto" (click)="cerrarImport()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Importar Clases</h2>
+      <button class="close-btn" (click)="cerrarImport()">×</button>
+    </div>
+    
+    <div class="tabs-header" style="margin-bottom: 15px; border-bottom: 2px solid #eee;">
+      <button [class.active-tab]="pestanaImport==='ARCHIVO'" (click)="cambiarPestanaImport('ARCHIVO')" style="flex:1; padding:10px; border:none; background:none; cursor:pointer; font-weight:bold;">Subir Archivo</button>
+      <button [class.active-tab]="pestanaImport==='WEB'" (click)="cambiarPestanaImport('WEB')" style="flex:1; padding:10px; border:none; background:none; cursor:pointer; font-weight:bold;">Internet</button>
+    </div>
+
+    <div class="modal-body">
+      <div *ngIf="pestanaImport === 'ARCHIVO'">
+        <p>Selecciona un archivo Excel (.xlsx) o CSV para importar tus clases.</p>
+        <div class="form-group">
+          <input type="file" (change)="onFileSelected($event)" accept=".csv, .xlsx">
+        </div>
+        <button class="btn-save" (click)="confirmarImportarArchivo()">Subir e Importar</button>
+      </div>
+
+      <div *ngIf="pestanaImport === 'WEB'">
+        <p>Importar automáticamente desde una URL compatible (EduPage, etc).</p>
+        <div class="form-group">
+          <label>URL del Horario:</label>
+          <input type="text" [(ngModel)]="urlImport" placeholder="https://...">
+        </div>
+        <button class="btn-save" (click)="confirmarImportarWeb()">Buscar e Importar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalBusquedaAbierto" (click)="cerrarBusqueda()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>🔍 Buscar Aula Disponible</h2>
+      <button class="close-btn" (click)="cerrarBusqueda()">×</button>
+    </div>
+    
+    <div class="modal-body">
+      <p>Selecciona fecha y hora para ver qué aulas están libres.</p>
+      
+      <div class="form-row">
+        <div class="form-group half">
+           <label>Fecha</label>
+           <input type="date" [(ngModel)]="busqueda.fecha">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group half">
+           <label>Hora Inicio</label>
+           <input type="time" [(ngModel)]="busqueda.inicio">
+        </div>
+        <div class="form-group half">
+           <label>Hora Fin</label>
+           <input type="time" [(ngModel)]="busqueda.fin">
+        </div>
+      </div>
+
+      <button class="btn-save" style="background:#9c27b0" (click)="buscarAulas()">Buscar Disponibles</button>
+
+      <div *ngIf="aulasDisponibles !== null" class="search-results-container">
+        <h4 style="margin: 15px 0 5px;">Resultados ({{ aulasDisponibles.length }}):</h4>
+        <div class="search-results">
+           <ul *ngIf="aulasDisponibles.length > 0; else noAulas">
+             <li *ngFor="let aula of aulasDisponibles" (click)="usarAula(aula.nombre)">
+               ✅ <strong>{{ aula.nombre }}</strong>
+               <span style="float:right; font-size: 0.8em; color: green; cursor:pointer;">Usar</span>
+             </li>
+           </ul>
+           <ng-template #noAulas>
+             <p style="color: red; padding: 10px;">🔴 No hay aulas disponibles en ese horario.</p>
+           </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="modalMencionesAbierto" (click)="cerrarModalMenciones()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+       <h2>🔔 Mis Menciones (Semana)</h2>
+       <button class="close-btn" (click)="cerrarModalMenciones()">×</button>
+    </div>
+    <div class="modal-body">
+       <div *ngIf="listaMenciones.length === 0">
+           <p>No tienes menciones esta semana.</p>
+       </div>
+       <div class="task-list" style="display:flex; flex-direction:column; gap:8px;">
+           <div *ngFor="let t of listaMenciones" class="tarea-card task-mention" style="cursor:pointer;" (click)="abrirModalVer(t); cerrarModalMenciones()">
+               <div style="font-weight:bold">{{ t.titulo }}</div>
+               <div>{{ t.hora }} | {{ t.aula || 'Sin aula' }}</div>
+               <div style="font-size:0.8em;">{{ t.descripcion }}</div>
+           </div>
+       </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .task-mention {
+     border: 2px solid #ff9800 !important;
+     background-color: #fff3e0 !important;
+  }
+  .active-tab { border-bottom: 3px solid #2196F3 !important; color: #2196F3; }
+  /* ESTILO PARA EL DÍA SELECCIONADO */
+  .selected-day {
+    background-color: #2196F3 !important;
+    color: white !important;
+    border-radius: 50%;
+    font-weight: bold;
+  }
+  
+  /* ESTILO AULA EN TARJETA */
+  .aula-badge {
+    font-size: 0.8em;
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+
+  /* ESTILOS BÁSICOS */
+  .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+  .modal-content { background: white; padding: 20px; border-radius: 8px; width: 90%; max-width: 450px; color: #333; }
+  .form-row { display: flex; gap: 10px; }
+  .half { flex: 1; }
+  .form-group { margin-bottom: 10px; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 8px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+  .modal-header { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; margin-bottom: 15px; }
+  .close-btn { border: none; background: none; font-size: 20px; cursor: pointer; }
+  .btn-save { background: #4CAF50; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 4px; }
+
+  /* NUEVOS ESTILOS PARA LOS ICONOS DEL MODAL (VER DETALLES) */
+  .modal-footer-iconos {
+    display: flex;
+    justify-content: flex-end; /* A la derecha */
+    gap: 15px; 
+    margin-top: 20px;
+    border-top: 1px solid #eee; 
+    padding-top: 10px;
+  }
+
+  .btn-icon-grande {
+    background: none;
+    border: none;
+    font-size: 1.5rem; /* Icono grande */
+    cursor: pointer;
+    padding: 5px;
+    transition: transform 0.2s;
+  }
+
+  .btn-icon-grande:hover {
+    transform: scale(1.2); 
+    background-color: #f5f5f5;
+    border-radius: 50%;
+  }
+
+  /* Search Modal Styles */
+  .search-results {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fdfdfd;
+  }
+  .search-results ul { list-style: none; padding: 0; margin: 0; }
+  .search-results li { padding: 10px; border-bottom: 1px solid #eee; cursor: pointer; }
+  .search-results li:hover { background-color: #e1bee7; } /* Light purple hover */
+</style>

@@ -10,7 +10,13 @@
     </div>
     
     <div class="modal-footer">
-      <button class="btn btn--primary" (click)="close()">Aceptar</button>
+      <ng-container *ngIf="state.type === 'confirm'; else defaultButtons">
+        <button class="btn btn--secondary" (click)="close()">Cancelar</button>
+        <button class="btn btn--primary" (click)="confirm()">Aceptar</button>
+      </ng-container>
+      <ng-template #defaultButtons>
+        <button class="btn btn--primary" (click)="close()">Aceptar</button>
+      </ng-template>
     </div>
   </div>
 </div>

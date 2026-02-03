@@ -19,4 +19,4 @@ pool.getConnection()
         console.error('❌ Error conectando a la base de datos:', error.code);
     });
 
-module.exports = { pool };
+module.exports = pool;

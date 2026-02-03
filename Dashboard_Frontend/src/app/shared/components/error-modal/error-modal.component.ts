@@ -27,6 +27,15 @@ export class ErrorModalComponent implements OnInit, OnDestroy {
     this.modalService.close();
   }
 
+  confirm(): void {
+    if (this.state.onConfirm) {
+      this.state.onConfirm();
+    }
+    this.close();
+  }
+
+
+
   // Helper to get title based on type
   get title(): string {
     switch (this.state.type) {
@@ -34,6 +43,7 @@ export class ErrorModalComponent implements OnInit, OnDestroy {
       case 'warning': return 'Advertencia';
       case 'success': return 'Éxito';
       case 'info': return 'Información';
+      case 'confirm': return 'Confirmar';
       default: return 'Aviso';
     }
   }

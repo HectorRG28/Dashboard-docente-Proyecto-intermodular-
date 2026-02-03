@@ -16,9 +16,14 @@ let sqlDeleteUsuario;        // Consulta: eliminar usuario
 
 let getAllUsuarios;          // Función: devuelve lista de usuarios
 let getUsuarioById;          // Función: devuelve un usuario por id
+let getUsuarioByEmail;       // Función: devuelve usuario por email (con password para check)
 let createUsuario;           // Función: crea un nuevo usuario
 let updateUsuario;           // Función: actualiza un usuario existente
 let deleteUsuario;           // Función: elimina un usuario
+let saveRecoveryToken;       // Función: guarda token de recuperación
+let getUsuarioByToken;       // Función: busca usuario por token de recuperación
+let updatePassword;          // Función: actualiza contraseña
+
 
 // 2. ASIGNACIONES
 pool = require('../db/pool');   // Importamos el pool de conexiones
@@ -59,10 +64,11 @@ sqlInsertUsuario = `
     nombre,
     apellidos,
     email,
+    password,
     rol,
     estado
   )
-  VALUES (?, ?, ?, ?, ?)
+  VALUES (?, ?, ?, ?, ?, ?)
 `;
 
 // Consulta para actualizar un usuario existente
@@ -146,6 +152,7 @@ createUsuario = async function (datosUsuario) {
       datosUsuario.nombre,
       datosUsuario.apellidos,
       datosUsuario.email,
+      datosUsuario.password,
       datosUsuario.rol,
       datosUsuario.estado
     ]);
@@ -247,12 +254,54 @@ deleteUsuario = async function (idUsuario) {
   }
 };
 
-// 4. EXPORTACIONES
+// --- NUEVAS FUNCIONES DE AUTH ---
+
+getUsuarioByEmail = async function (email) {
+  try {
+    const [rows] = await pool.query('SELECT * FROM usuario WHERE email = ?', [email]);
+    return rows[0] || null;
+  } catch (error) {
+    throw error;
+  }
+};
+
+saveRecoveryToken = async function (email, token, expiracion) {
+  try {
+    await pool.query('UPDATE usuario SET token_recuperacion = ?, token_expiracion = ? WHERE email = ?', [token, expiracion, email]);
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+getUsuarioByToken = async function (token) {
+  try {
+    const [rows] = await pool.query('SELECT * FROM usuario WHERE token_recuperacion = ? AND token_expiracion > NOW()', [token]);
+    return rows[0] || null;
+  } catch (error) {
+    throw error;
+  }
+};
+
+updatePassword = async function (id, password) {
+  try {
+    await pool.query('UPDATE usuario SET password = ?, token_recuperacion = NULL, token_expiracion = NULL WHERE id_usuario = ?', [password, id]);
+    return true;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+// 4. EXPORTACIONES (AL FINAL PARA ASEGURAR QUE TODO ESTÉ DEFINIDO)
 module.exports = {
   getAllUsuarios,
   getUsuarioById,
+  getUsuarioByEmail,
   createUsuario,
   updateUsuario,
-  deleteUsuario
+  deleteUsuario,
+  saveRecoveryToken,
+  getUsuarioByToken,
+  updatePassword
 };
-

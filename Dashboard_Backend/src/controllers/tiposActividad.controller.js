@@ -1,4 +1,4 @@
-const { pool } = require('../db/pool.js');
+const pool = require('../db/pool.js');
 
 exports.getTipos = async (req, res) => {
     try {

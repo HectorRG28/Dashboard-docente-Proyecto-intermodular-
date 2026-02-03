@@ -1,0 +1,13 @@
+<div class="auth-container">
+  <div class="auth-box">
+    <h2>Iniciar Sesión</h2>
+    <input type="email" placeholder="Email" [(ngModel)]="email">
+    <input type="password" placeholder="Contraseña" [(ngModel)]="password">
+    <button class="btn btn--primary" (click)="login()">Entrar</button>
+    
+    <div class="auth-links">
+      <a routerLink="/register">¿No tienes cuenta? Regístrate</a>
+      <a routerLink="/forgot-password">Olvidé mi contraseña</a>
+    </div>
+  </div>
+</div>

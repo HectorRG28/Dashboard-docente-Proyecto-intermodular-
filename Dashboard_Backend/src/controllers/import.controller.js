@@ -1,7 +1,7 @@
 const xlsx = require('xlsx');
 const axios = require('axios');
 const cheerio = require('cheerio');
-const { pool } = require('../db/pool');
+const pool = require('../db/pool');
 const fs = require('fs');
 
 // UTILS

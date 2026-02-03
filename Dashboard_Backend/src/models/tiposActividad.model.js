@@ -1,10 +1,10 @@
 // src/models/tiposActividad.model.js
 const pool = require('../db/pool');
 
-// OBTENER TODOS LOS TIPOS (De la tabla 'tipo_evaluacion')
+// OBTENER TODOS LOS TIPOS (De la tabla 'tipo_actividad')
 const getAllTiposActividad = async function () {
   try {
-    const sql = 'SELECT * FROM tipo_evaluacion';
+    const sql = 'SELECT * FROM tipo_actividad';
     const [rows] = await pool.query(sql);
     return rows;
   } catch (error) {
@@ -15,7 +15,7 @@ const getAllTiposActividad = async function () {
 // OBTENER UN TIPO POR ID
 const getTipoActividadById = async function (id) {
   try {
-    const sql = 'SELECT * FROM tipo_evaluacion WHERE id_tipo = ?';
+    const sql = 'SELECT * FROM tipo_actividad WHERE id_tipo = ?';
     const [rows] = await pool.query(sql, [id]);
     return rows[0];
   } catch (error) {

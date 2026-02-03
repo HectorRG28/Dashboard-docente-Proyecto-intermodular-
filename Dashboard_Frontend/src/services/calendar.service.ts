@@ -43,4 +43,14 @@ export class CalendarService {
   importWeb(url: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/import/web`, { url });
   }
+
+  getAvailableAulas(fecha: string, inicio: string, fin: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/actividades-evaluables/aulas-disponibles`, {
+      params: { fecha, inicio, fin }
+    });
+  }
+
+  getDocentes(): Observable<any[]> {
+      return this.http.get<any[]>(`${this.apiUrl}/usuarios`);
+  }
 }

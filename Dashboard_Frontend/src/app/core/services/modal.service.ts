@@ -4,7 +4,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export interface ModalState {
   show: boolean;
   message: string;
-  type: 'error' | 'warning' | 'info' | 'success';
+  type: 'error' | 'warning' | 'info' | 'success' | 'confirm';
+  onConfirm?: () => void;
 }
 
 @Injectable({
@@ -26,6 +27,15 @@ export class ModalService {
       show: true,
       message,
       type
+    });
+  }
+
+  openConfirm(message: string, onConfirm: () => void) {
+    this.stateSubject.next({
+      show: true,
+      message,
+      type: 'confirm',
+      onConfirm
     });
   }
 
