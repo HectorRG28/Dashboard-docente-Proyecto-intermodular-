@@ -1,4 +1,4 @@
-<div class="layout-wrapper"> <!-- Estructura unificada -->
+<div class="layout-wrapper" [class.dark-theme-enabled]="isDark">
   
   <aside class="sidebar">
     <h2 class="app-title" (click)="irAHoy()">📅 Calendario Mensual</h2>
@@ -78,17 +78,17 @@
 </div>
 
 <!-- MODAL AJUSTES (REUTILIZADO) -->
-<div class="modal-overlay" *ngIf="mostrarAjustes" (click)="toggleAjustes()">
+<div class="modal-overlay" *ngIf="mostrarAjustes" (click)="toggleAjustes()" [class.dark-theme-enabled-modal]="isDark">
   <div class="modal-content settings-modal" (click)="$event.stopPropagation()">
     <div class="modal-header"><h2>Configuración</h2><button class="close-btn" (click)="toggleAjustes()">×</button></div>
     <div class="modal-body">
-      <app-ajustes [embed]="true"></app-ajustes>
+      <app-ajustes [embed]="true" [isDarkInput]="isDark"></app-ajustes>
     </div>
   </div>
 </div>
 
 <!-- MODAL TAREAS (NUEVO) -->
-<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()" [class.dark-theme-enabled-modal]="isDark">
   <div class="modal-content task-modal" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>{{ modoModal === 'CREAR' ? 'Nueva Tarea' : (modoModal === 'EDITAR' ? 'Editar' : 'Detalles') }}</h2>
@@ -169,7 +169,7 @@
 </div>
 
 <!-- MODAL IMPORTAR -->
-<div class="modal-overlay" *ngIf="modalImportAbierto" (click)="cerrarImport()">
+<div class="modal-overlay" *ngIf="modalImportAbierto" (click)="cerrarImport()" [class.dark-theme-enabled-modal]="isDark">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>Importar Clases</h2>
@@ -203,7 +203,7 @@
 </div>
 
 <!-- MODAL BÚSQUEDA -->
-<div class="modal-overlay" *ngIf="modalBusquedaAbierto" (click)="cerrarBusqueda()">
+<div class="modal-overlay" *ngIf="modalBusquedaAbierto" (click)="cerrarBusqueda()" [class.dark-theme-enabled-modal]="isDark">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h2>🔍 Buscar Aula Disponible</h2>
@@ -237,7 +237,7 @@
 </div>
 
 <!-- MODAL MIS MENCIONES -->
-<div class="modal-overlay" *ngIf="modalMencionesAbierto" (click)="cerrarModalMenciones()">
+<div class="modal-overlay" *ngIf="modalMencionesAbierto" (click)="cerrarModalMenciones()" [class.dark-theme-enabled-modal]="isDark">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <div class="modal-header">
        <h2>🔔 Mis Menciones (Mes)</h2>

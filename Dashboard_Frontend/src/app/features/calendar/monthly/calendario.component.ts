@@ -72,7 +72,14 @@ export class CalendarioComponent implements OnInit {
     private authService: AuthService
   ) { }
 
+  isDark: boolean = false;
+
   ngOnInit(): void {
+    this.themeService.isDarkMode$.subscribe((val: boolean) => {
+
+      this.isDark = val;
+    });
+
     this.themeService.timeFormat$.subscribe((fmt: '12h' | '24h') => {
       this.timeFormat = fmt;
     });

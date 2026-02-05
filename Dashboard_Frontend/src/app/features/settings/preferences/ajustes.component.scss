@@ -155,46 +155,62 @@ input:checked + .slider:before {
 
 /* --- MODO OSCURO GLOBAL (Inversión total) --- */
 /* Esto define cómo se ve esta página cuando activas el modo oscuro */
-:host-context(body.dark-theme) {
-  .ajustes-wrapper {
-    background-color: #000000; /* Fondo Negro */
-  }
-  .main-title,
-  .label-text {
-    color: #ffffff; /* Texto Blanco */
-    border-color: #ffffff;
-  }
+/* --- MODO OSCURO GLOBAL (Inversión total) --- */
+/* Esto define cómo se ve esta página cuando activas el modo oscuro */
+/* Ahora usamos .dark-mode directo en el wrapper para mayor fiabilidad */
+.ajustes-wrapper.dark-mode {
+  background-color: #000000; /* Fondo Negro */
+  
+  &.embedded { background-color: transparent !important; }
 
-  /* El borde del switch se vuelve blanco */
-  .switch {
-    border-color: #ffffff;
-  }
-  .slider:before {
-    background-color: #ffffff; /* Bolita blanca */
-  }
-  input:checked + .slider {
-    background-color: #ffffff; /* Fondo blanco al activar */
-  }
-  input:checked + .slider:before {
-    background-color: #000000; /* Bolita negra al activar */
-  }
+  /* Como .main-title y .setting-row están DENTRO de .ajustes-wrapper, 
+     necesitamos targetearlos correctamente. En SCSS anidado: */
 
-  /* Botones horario en modo oscuro */
-  .format-toggles {
-    border-color: #ffffff;
-    button {
-      background-color: #000000;
-      color: #ffffff;
-      border-right-color: #ffffff;
+  /* Para elementos hermanos o hijos directos que estaban fuera del nesting anterior,
+     ahora deben estar dentro o referenciados.
+     Pero revisando el HTML, todo está DENTRO de .ajustes-wrapper.
+     Así que podemos usar nesting normal o ::ng-deep si fuera necesario (no debería).
+  */
+}
 
-      &:hover {
-        background-color: #333;
-      }
-
-      &.active {
-        background-color: #ffffff;
-        color: #000000;
-      }
+/* Estilos que dependen del wrapper dark-mode */
+.ajustes-wrapper.dark-mode {
+    .main-title,
+    .label-text {
+        color: #ffffff; /* Texto Blanco */
+        border-color: #ffffff;
     }
-  }
+
+    /* El borde del switch se vuelve blanco */
+    .switch {
+        border-color: #ffffff;
+    }
+    .slider:before {
+        background-color: #ffffff; /* Bolita blanca */
+    }
+    input:checked + .slider {
+        background-color: #ffffff; /* Fondo blanco al activar */
+    }
+    input:checked + .slider:before {
+        background-color: #000000; /* Bolita negra al activar */
+    }
+
+    /* Botones horario en modo oscuro */
+    .format-toggles {
+        border-color: #ffffff;
+        button {
+            background-color: #000000;
+            color: #ffffff;
+            border-right-color: #ffffff;
+
+            &:hover {
+                background-color: #333;
+            }
+
+            &.active {
+                background-color: #ffffff;
+                color: #000000;
+            }
+        }
+    }
 }

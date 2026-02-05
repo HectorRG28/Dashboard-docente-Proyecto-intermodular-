@@ -1,4 +1,4 @@
-<div class="ajustes-wrapper" [class.embedded]="embed">
+<div class="ajustes-wrapper" [class.embedded]="embed" [class.dark-mode]="(isDarkInput !== null) ? isDarkInput : isDarkMode">
   
   <h1 class="main-title" *ngIf="!embed">CONFIGURACIÓN</h1>
 
